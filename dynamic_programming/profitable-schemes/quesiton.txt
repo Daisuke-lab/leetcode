@@ -1,2 +1,3 @@
 https://leetcode.com/problems/profitable-schemes/
 
+"C:\Users\daisu\Videos\Coding Test Video Tutorial\879. Profitable Schemes.mp4"

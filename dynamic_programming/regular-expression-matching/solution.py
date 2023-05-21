@@ -40,7 +40,7 @@ class Solution:
             memo[key] = False
             return memo[key]
 
-        
+        # s!= ""で p == "*"の時
         if p[j] == '*':
             #pを二個前に戻して比較している。.*やa*の繰り返しが0の時を想定
             if self.backtrack(memo, s, p, i, j - 2):
@@ -52,7 +52,7 @@ class Solution:
                     memo[key] = True
                     return memo[key]
         
-        #pが.かaの時、sとpどっちも一文字減らしてrecurion
+        #s!= ""でpが.かaの時、sとpどっちも一文字減らしてrecurion
         #.*やa*のケースは上のifで巻き取られているのでok
         if p[j] == '.' or s[i] == p[j]:
             if self.backtrack(memo, s, p, i - 1, j - 1):
