@@ -1,1 +1,4 @@
 https://leetcode.com/problems/tree-of-coprimes/
+
+"C:\Users\daisu\Videos\Coding Test Video Tutorial\tree-of-coprimes.mp4"
+
