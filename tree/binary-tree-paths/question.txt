@@ -1,0 +1,3 @@
+https://leetcode.com/problems/binary-tree-paths/description/
+
+※簡単だったため動画はなし。
