@@ -1,24 +1,14 @@
 class Solution:
     def jump(self, nums: List[int]) -> int:
-        return self.recursion(nums, 0)
+        return self.tabulation(nums)
 
-
-    def recursion_with_memo(self, nums, i):
-        return
-
-    def recursion(self, nums, i):
-        if i == len(nums) - 1:
-            return 0
-        elif i >= len(nums):
-            return float("inf")
-
-        else:
+    def tabulation(self, nums):
+        tabs = [float("inf") for num in nums]
+        tabs[0] = 0
+        for i in range(len(nums)):
             steps = nums[i]
-            count = 0
-            min_count = float("inf")
-            for step in range(1, steps+1):
-               count = self.recursion(nums, i + step)
-               if min_count > count:
-                   min_count = count
-            
-            return min_count + 1
+            if tabs[i] != float("inf"):
+                for step in range(1, steps+1):
+                    min_count = tabs[i] + 1
+                    if len(tabs) > i + step and tabs[i + step] > min_count:
+                        tabs[i + step] = min_count

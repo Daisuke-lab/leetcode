@@ -1,0 +1,4 @@
+https://leetcode.com/problems/jump-game/
+
+※問題をきちんと読むこと。
+recursion系のsolutionは、読み間違えてちょっと外れたことをしている。
