@@ -1,0 +1,4 @@
+https://leetcode.com/problems/course-schedule/submissions/
+
+※問題が悪いが、これを通してtopological sortを学ぶといい。
+
