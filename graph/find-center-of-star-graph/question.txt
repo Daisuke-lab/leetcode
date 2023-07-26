@@ -1,0 +1,2 @@
+簡単すぎるので解かなくていい。
+https://leetcode.com/problems/find-center-of-star-graph/submissions/
