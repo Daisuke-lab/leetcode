@@ -1,2 +1,3 @@
-これはunion findの問題。
+発想はあったし簡単なんだけど、バグをつぶしきれなかった。悲しい。
+
 https://leetcode.com/problems/surrounded-regions/
