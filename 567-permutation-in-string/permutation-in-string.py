@@ -22,7 +22,8 @@ class Solution:
             s1_map[c] += 1
         queue = []
         s2_map = defaultdict(int)
-        s1_map_length = len(s1_map)
+        # Save length here. Otherwise when you call s1_map[new_char], it automatically insert 0 and elongate map
+        s1_map_length = len(s1_map) 
         match_length = 0
         for i in range(len(s1)):
             c = s2[i]
@@ -30,8 +31,6 @@ class Solution:
             s2_map[c] += 1
             if s1_map[c] == s2_map[c]:
                 match_length += 1
-            #print(s2_map)
-            #print(match_length)
             if match_length == s1_map_length:
                 return True
         for i in range(len(s1), len(s2)):
