@@ -5,9 +5,6 @@ class Solution:
         self.nums = nums
         while l <= r:
             m = (l + r) // 2
-            print(l, m, r)
-            print(self.in_left_sorted(l, m))
-            print(self.in_right_sorted(m, r))
             if m == l and m == r:
                 return nums[m]
             elif self.in_left_sorted(l, m) and not self.in_right_sorted(m, r):
