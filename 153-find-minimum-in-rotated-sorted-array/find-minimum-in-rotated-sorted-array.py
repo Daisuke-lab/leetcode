@@ -1,19 +1,26 @@
 class Solution:
     def findMin(self, nums: List[int]) -> int:
-        queue = collections.deque()
-        queue.append((0, len(nums) - 1))
-        while queue:
-            l, r = queue.popleft()
+        l = 0
+        r = len(nums) - 1
+        self.nums = nums
+        while l <= r:
             m = (l + r) // 2
-            #print(l, m, r)
-            if m+1 < len(nums) and nums[m] > nums[m+1]:
-                return nums[m+1]
-            elif m > 0 and nums[m-1] > nums[m]:
+            print(l, m, r)
+            print(self.in_left_sorted(l, m))
+            print(self.in_right_sorted(m, r))
+            if m == l and m == r:
                 return nums[m]
+            elif self.in_left_sorted(l, m) and not self.in_right_sorted(m, r):
+                l = m + 1
+            elif not self.in_left_sorted(l, m) and self.in_right_sorted(m, r):
+                r = m
             else:
-                if l <= m - 1:
-                    queue.append((l, m-1))
-                if m + 1 <= r:
-                    queue.append((m+1, r))
-        return nums[0]
+                return nums[l]
+
+
+    def in_left_sorted(self, l, m):
+        return self.nums[l] <= self.nums[m]
+    def in_right_sorted(self, m, r):
+        return self.nums[m] <= self.nums[r]
+        
         
