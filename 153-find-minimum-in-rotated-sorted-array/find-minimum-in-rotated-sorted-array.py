@@ -1,5 +1,6 @@
 class Solution:
     def findMin(self, nums: List[int]) -> int:
+        # This is not fully efficient because even when left and right side are sorted, it keeps searching left side
         l, r = 0, len(nums) - 1
         while l < r:
             m = l + (r - l) // 2
