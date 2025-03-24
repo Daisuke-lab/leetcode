@@ -15,24 +15,19 @@ class Codec:
         """
         self.preorder = []
         self.inorder = []
-        self.inorder_search(root)
-        self.preorder_search(root)
+        self.search(root)
         result =  ",".join(self.preorder) + "|" + ",".join(self.inorder)
         #print(result)
         return result
     
-    def inorder_search(self, root):
-        if root is None:
-            return 
-        self.inorder_search(root.left)
-        self.inorder.append(f"{root.val}#{hash(root)}")
-        self.inorder_search(root.right)
-    def preorder_search(self, root):
+    def search(self, root):
         if root is None:
             return 
         self.preorder.append(f"{root.val}#{hash(root)}")
-        self.preorder_search(root.left)
-        self.preorder_search(root.right)
+        self.search(root.left)
+        self.inorder.append(f"{root.val}#{hash(root)}")
+        self.search(root.right)
+
         
         
 
