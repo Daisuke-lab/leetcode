@@ -19,17 +19,16 @@ class Solution:
         # 5. go right
         # 6. go back to 1
 
-        # you can not add simply to left in the first place
-        # if preorder[0] and inorder[0] are the same, please go right.
+        # TAKE AWAY
+        # simpel while loop doesn't tell you which direction you should add,
+        # The only way to know is set some flag (direction)
+
         tree = dummy = TreeNode(float("inf"))
         node_map = {}
-        queue = collections.deque()
-        queue.append((0, "left"))
-        while queue:
-            i, direction = queue.popleft()
-            if i >= len(preorder):
-                continue
-            node = TreeNode(preorder[i])
+        direction = "left"
+        while preorder:
+            val = preorder.pop(0)
+            node = TreeNode(val)
             node_map[node.val] = node
             if direction == "left":
                 tree.left = node
@@ -37,14 +36,10 @@ class Solution:
             else:
                 tree.right = node
                 tree = node
-            go_right = False
+            direction = "left"
             while inorder and inorder[0] in node_map:
-                go_right = True
+                direction = "right"
                 tree = node_map[inorder.pop(0)]
-            if go_right:
-                queue.append((i+1, "right"))
-            else:
-                queue.append((i+1, "left"))
         
         return dummy.left
             
