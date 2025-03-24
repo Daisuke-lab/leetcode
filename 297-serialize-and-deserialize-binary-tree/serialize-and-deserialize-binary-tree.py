@@ -8,60 +8,38 @@
 class Codec:
 
     def serialize(self, root):
-        """Encodes a tree to a single string.
-        
-        :type root: TreeNode
-        :rtype: str
-        """
-        self.preorder = []
-        self.inorder = []
-        self.search(root)
-        result =  ",".join(self.preorder) + "|" + ",".join(self.inorder)
-        #print(result)
-        return result
-    
-    def search(self, root):
+        self.serialized = []
+        self.preorder(root)
+        print(self.serialized)
+        return ",".join(self.serialized)
+
+
+    def preorder(self, root):
         if root is None:
-            return 
-        self.preorder.append(f"{root.val}#{hash(root)}")
-        self.search(root.left)
-        self.inorder.append(f"{root.val}#{hash(root)}")
-        self.search(root.right)
+            self.serialized.append("N")
+            return
+        self.serialized.append(str(root.val))
+        self.preorder(root.left)
+        self.preorder(root.right)
 
         
         
 
     def deserialize(self, data):
-        """Decodes your encoded data to tree.
-        
-        :type data: str
-        :rtype: TreeNode
-        """
-        if data == "|":
+        self.vals = data.split(",")
+        self.i = 0
+        return self.dfs()
+    
+    def dfs(self):
+        if self.vals[self.i] == "N":
+            self.i += 1
             return None
-        preorder, inorder = data.split("|")
-        preorder = preorder.split(",")
-        inorder = inorder.split(",")
-        tree = dummy = TreeNode()
-        direction = "left"
-        node_map = {}
-        while preorder:
-            key = preorder.pop(0)
-            val = int(key.split("#")[0])
-            node = TreeNode(val)
-            node_map[key] = node
-            if direction == "left":
-                tree.left = node
-                tree = node
-            else:
-                tree.right = node
-                tree = node
-            direction = "left"
-            while inorder and inorder[0] in node_map:
-                direction = "right"
-                parent_key = inorder.pop(0)
-                tree = node_map[parent_key]
-        return dummy.left
+        node = TreeNode(int(self.vals[self.i]))
+        self.i += 1
+        node.left = self.dfs()
+        node.right = self.dfs()
+        return node
+
                     
 
 # Your Codec object will be instantiated and called as such:
