@@ -17,7 +17,6 @@ class Solution:
         self.answer = None
         self.k = k
         self.dfs(root)
-        print(self.visited)
         return self.answer
 
     def dfs(self, root):
