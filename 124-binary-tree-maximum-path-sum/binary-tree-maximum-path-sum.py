@@ -16,21 +16,7 @@ class Solution:
 
     def dfs(self, root):
         if root is None:
-            return 0, 0
-        elif root.left is None and root.right is None:
-            return root.val, root.val
-        elif root.left is None:
-            right_max_path_sum, right_max_path = self.dfs(root.right)
-            curr_max_path_sum = right_max_path + root.val
-            result_max_path_sum = self.get_result_max_path_sum(-float("inf"), -float("inf"), right_max_path_sum, right_max_path, root)
-            result_max_path = self.get_result_max_path(-float("inf"), right_max_path, root)
-            return result_max_path_sum, result_max_path
-        elif root.right is None:
-            left_max_path_sum, left_max_path = self.dfs(root.left)
-            curr_max_path_sum = left_max_path + root.val
-            result_max_path_sum = self.get_result_max_path_sum(left_max_path_sum, left_max_path,-float("inf"), -float("inf"), root)
-            result_max_path = self.get_result_max_path(left_max_path, -float("inf"), root)
-            return result_max_path_sum, result_max_path
+            return -float("inf"), -float("inf")
         else:
             left_max_path_sum, left_max_path = self.dfs(root.left)
             right_max_path_sum, right_max_path = self.dfs(root.right)
