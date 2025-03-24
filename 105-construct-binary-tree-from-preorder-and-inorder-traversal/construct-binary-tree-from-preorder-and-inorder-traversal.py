@@ -22,6 +22,7 @@ class Solution:
         # TAKE AWAY
         # simpel while loop doesn't tell you which direction you should add,
         # The only way to know is set some flag (direction)
+        # The assumption was to shallow.
 
         tree = dummy = TreeNode(float("inf"))
         node_map = {}
