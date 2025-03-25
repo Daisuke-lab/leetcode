@@ -26,7 +26,8 @@ class Twitter:
         posts = self.posts.get(userId, [])
         self.timestamp -= 1
         post = {"userId": userId, "tweetId": tweetId, "timestamp": self.timestamp}
-        heapq.heappush(posts, (self.timestamp, post))
+        #heapq.heappush(posts, (self.timestamp, post))
+        posts.append((self.timestamp, post))
         self.posts[userId] = posts
         
 
@@ -38,9 +39,7 @@ class Twitter:
         users.append(userId)
         users.extend(followees)
         for user in users:
-            post_heap = self.posts.get(user)
-            if post_heap:
-                feed_heap.extend(post_heap)
+            feed_heap.extend(self.posts.get(user, []))
         heapq.heapify(feed_heap)
         while feed_heap:
             timestamp, post = heapq.heappop(feed_heap)
