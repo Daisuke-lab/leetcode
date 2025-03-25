@@ -36,31 +36,24 @@ class Twitter:
         feed_heap = []
         post_heap = self.posts.get(userId)
         if post_heap:
-            post = (heapq.nsmallest(1, post_heap)[0][0], 1, post_heap)
-            feed_heap.append(post)
+            feed_heap.extend(post_heap)
         for followee in followees:
             post_heap = self.posts.get(followee)
             if post_heap and followee != userId:
-                post = (heapq.nsmallest(1, post_heap)[0][0], 1, post_heap)
-                feed_heap.append(post)
+                feed_heap.extend(post_heap)
+        #print(feed)
         heapq.heapify(feed_heap)
         while feed_heap:
             #print("feed_heap_length::", len(feed_heap))
             #print("feed_heap::", feed_heap)
 
-            timestamp, n, post_heap = heapq.heappop(feed_heap)
+            timestamp, post = heapq.heappop(feed_heap)
             #print("timestamp::",timestamp)
             #print("n::", n)
             #print("post_heap::", post_heap)
-            timestamp, post = heapq.nsmallest(n, post_heap)[-1]
             feed.append(post["tweetId"])
             if len(feed) == 10:
                 return feed
-            if len(post_heap) > n:
-                #print("DEBUG::", heapq.nsmallest(2, post_heap))
-                post = (heapq.nsmallest(n+1, post_heap)[-1][0], n+1, post_heap)
-                #print("adding post::", post)
-                heapq.heappush(feed_heap, post)
         return feed
             
 
