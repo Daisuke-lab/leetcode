@@ -30,8 +30,8 @@ class Solution:
             if sorted_curr not in self.positions_list:
                 self.positions_list.append(sorted_curr)
             return
-        next_left_invalid = {(i+1, j-1) for i, j in left_invalid}
-        next_right_invalid = {(i+1, j+1) for i, j in right_invalid}
+        next_left_invalid = {(i+1, j-1) for i, j in left_invalid if j > 0}
+        next_right_invalid = {(i+1, j+1) for i, j in right_invalid if j < self.n}
         for j in range(self.n):
             if j in taken_columns:
                 continue
