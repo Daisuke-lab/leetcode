@@ -31,22 +31,20 @@ class Solution:
             if sorted_curr not in self.positions_list:
                 self.positions_list.append(sorted_curr)
             return
-        next_left_invalid = {(i+1, j-1) for i, j in left_invalid if j > 0}
-        next_right_invalid = {(i+1, j+1) for i, j in right_invalid if j < self.n}
         for j in range(self.n):
             if j in taken_columns:
                 continue
-            if (i, j) in left_invalid:
+            if j + i in left_invalid:
                 continue
-            if (i, j) in right_invalid:
+            if i - j in right_invalid:
                 continue
             taken_columns.add(j)
             curr.append((i, j))
-            next_left_invalid.add((i+1, j-1))
-            next_right_invalid.add((i+1, j+1))
-            self.recursion(i+1, taken_columns, next_left_invalid, next_right_invalid, curr)
+            left_invalid.add(j + i)
+            right_invalid.add(i - j)
+            self.recursion(i+1, taken_columns, left_invalid, right_invalid, curr)
             taken_columns.remove(j)
             curr.pop()
-            next_left_invalid.remove((i+1, j-1))
-            next_right_invalid.remove((i+1, j+1))
+            left_invalid.remove(j + i)
+            right_invalid.remove(i - j)
 
