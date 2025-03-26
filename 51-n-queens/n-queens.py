@@ -27,9 +27,7 @@ class Solution:
     
     def recursion(self, i, taken_columns, left_invalid, right_invalid, curr):
         if i == self.n:
-            sorted_curr = sorted(curr)
-            if sorted_curr not in self.positions_list:
-                self.positions_list.append(sorted_curr)
+            self.positions_list.append(curr.copy())
             return
         for j in range(self.n):
             if j in taken_columns:
