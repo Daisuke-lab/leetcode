@@ -20,9 +20,10 @@ class Solution:
         self.n = n
         self.recursion(0, set(), set(), set(), [])
         answer = []
-        for positions in self.positions_list:
-            answer.append(["".join(["Q" if (i, j) in positions else "." for j in range(n)]) for i in range(n)])
-        return answer
+        return [["".join(["Q" if (i, j) in positions else "." for j in range(n)]) for i in range(n)] for positions in self.positions_list]
+        # for positions in self.positions_list:
+        #     answer.append(["".join(["Q" if (i, j) in positions else "." for j in range(n)]) for i in range(n)])
+        # return answer
     
     def recursion(self, i, taken_columns, left_invalid, right_invalid, curr):
         if i == self.n:
