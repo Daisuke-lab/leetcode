@@ -21,9 +21,10 @@ class Solution:
         for i in range(self.ROW):
             for j in range(self.COL):
                 if (i, j) not in self.visited and self.board[i][j] == "O":
-                    positions, result = self.dfs(i, j)
+                    self.positions = set()
+                    result = self.dfs(i, j)
                     if result:
-                        for x_i, x_j in positions:
+                        for x_i, x_j in self.positions:
                             self.board[x_i][x_j] = "X"
                     # else:
                     #     for x_i, x_j in positions:
@@ -32,22 +33,20 @@ class Solution:
 
     def dfs(self, i, j):
         self.visited.add((i, j))
+        self.positions.add((i, j))
         if i == 0 or j == 0 or i == self.ROW - 1 or j == self.COL - 1:
             conqured = False
         else:
             conqured = True
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        positions = [(i, j)]
         for direction in directions:
             new_i = i + direction[0]
             new_j = j + direction[1]
             if new_i < 0 or new_j < 0 or new_i == self.ROW or new_j == self.COL:
                 continue
             if (new_i, new_j) not in self.visited and self.board[new_i][new_j] == "O":
-                ad_positions, ad_conqured = self.dfs(new_i, new_j)
-                conqured = ad_conqured and conqured
-                positions.extend(ad_positions)
-        return positions, conqured
+                conqured = self.dfs(new_i, new_j) and conqured
+        return conqured
         
 
                             
