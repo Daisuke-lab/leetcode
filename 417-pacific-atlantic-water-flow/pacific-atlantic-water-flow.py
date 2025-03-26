@@ -16,66 +16,37 @@ class Solution:
         self.heights = heights
         self.ROW = len(self.heights)
         self.COL = len(self.heights[0])
-        self.tab = [[None for j in range(self.COL)] for i in range(self.ROW)]
-        answer = []
+        pacific_reachable = set()
+        atlantic_reachable = set()
+
+        for j in range(self.COL):
+            first = 0
+            last = self.ROW -1
+            self.dig(first, j, pacific_reachable)
+            self.dig(last, j, atlantic_reachable)
         for i in range(self.ROW):
-            for j in range(self.COL):
-                pacific_reachable, atlantic_reachable = self.is_reachable(i, j, set(), False, False)
-                if pacific_reachable and atlantic_reachable:
-                    answer.append([i, j])
+            first = 0
+            last = self.COL - 1
+            self.dig(i, first, pacific_reachable)
+            self.dig(i, last, atlantic_reachable)
+        answer = []
+        for i, j in pacific_reachable:
+            if (i, j) in atlantic_reachable:
+                answer.append([i, j])
         return answer
 
-    def is_reachable(self, i, j, passed, prev_pacific_reachable, prev_atlantic_reachable):
-        if self.tab[i][j] is not None:
-            return self.tab[i][j]
-        if (i, j) in passed:
-            return False, False
-        pacific_reachable, atlantic_reachable = self.check_edge(i, j)
-        pacific_reachable = pacific_reachable or prev_pacific_reachable
-        atlantic_reachable = atlantic_reachable or prev_atlantic_reachable
+    def dig(self, i, j, visited):
+        if (i, j) in visited:
+            return 
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        passed.add((i, j))
-        same_heights = []
+        visited.add((i, j))
         for direction in directions:
             new_i = i + direction[0]
             new_j = j + direction[1]
             if new_i < 0 or new_i == self.ROW or new_j < 0 or new_j == self.COL:
-                continue
+                continue 
             if self.heights[i][j] > self.heights[new_i][new_j]:
-                ad_pacific_reachable, ad_atlantic_reachable = self.is_reachable(new_i, new_j, passed, False, False)
-            elif self.heights[i][j] == self.heights[new_i][new_j]:
-                same_heights.append((new_i, new_j))
-                ad_pacific_reachable, ad_atlantic_reachable = (False, False)
-            else:
-                ad_pacific_reachable, ad_atlantic_reachable = (False, False)
-            pacific_reachable = ad_pacific_reachable or pacific_reachable
-            atlantic_reachable = ad_atlantic_reachable or atlantic_reachable
-        # Explore lower heights first. then pass current (pacific_reachable, atlantic_reachable)
-        # to the same height neighbor. Otherwise, the flag is meaningless
-        # Ex. 2,4,>5<,5: if you are i=2 and explore i=3 first, it doesn't know it can reach atlantic ocean
-        for new_i, new_j in same_heights:            
-            ad_pacific_reachable, ad_atlantic_reachable = self.is_reachable(new_i, new_j, passed, pacific_reachable, atlantic_reachable)
-            pacific_reachable = ad_pacific_reachable or pacific_reachable
-            atlantic_reachable = ad_atlantic_reachable or atlantic_reachable
+                continue
+            self.dig(new_i, new_j, visited)
 
-
-        passed.remove((i, j))
-        self.tab[i][j] = (pacific_reachable, atlantic_reachable)
-        return pacific_reachable, atlantic_reachable
-
-    
-    def check_edge(self, i, j):
-        pacific_reachable = False 
-        atlantic_reachable = False
-        if i == 0:
-            pacific_reachable = True
-        if i == self.ROW - 1:
-            atlantic_reachable = True
-        if j == 0:
-            pacific_reachable = True 
-        if j == self.COL -1:
-            atlantic_reachable = True
-
-        return (pacific_reachable, atlantic_reachable)
-        
         
