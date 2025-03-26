@@ -20,11 +20,7 @@ class Solution:
         answer = []
         for i in range(self.ROW):
             for j in range(self.COL):
-                if (i, j) == (3, 27):
-                    print(self.tab[3][27])
                 pacific_reachable, atlantic_reachable = self.is_reachable(i, j, set(), False, False)
-                if (i, j) == (3, 27):
-                    print(pacific_reachable, atlantic_reachable)
                 if pacific_reachable and atlantic_reachable:
                     answer.append([i, j])
         return answer
@@ -34,9 +30,6 @@ class Solution:
             return self.tab[i][j]
         if (i, j) in passed:
             return False, False
-        if (i, j) == (3, 27):
-            print(passed, prev_pacific_reachable, prev_atlantic_reachable)
-            print("height::", self.heights[i][j])
         pacific_reachable, atlantic_reachable = self.check_edge(i, j)
         pacific_reachable = pacific_reachable or prev_pacific_reachable
         atlantic_reachable = atlantic_reachable or prev_atlantic_reachable
@@ -55,18 +48,15 @@ class Solution:
                 ad_pacific_reachable, ad_atlantic_reachable = (False, False)
             else:
                 ad_pacific_reachable, ad_atlantic_reachable = (False, False)
-            # if (i, j) == (3, 27):
-            #         print(f"new_i:{new_i}, new_j:{new_j}")
-            #         print(f"ad_pacific_reachable:{ad_pacific_reachable}, ad_atlantic_reachable={ad_atlantic_reachable}") 
             pacific_reachable = ad_pacific_reachable or pacific_reachable
             atlantic_reachable = ad_atlantic_reachable or atlantic_reachable
+        # Explore lower heights first. then pass current (pacific_reachable, atlantic_reachable)
+        # to the same height neighbor. Otherwise, the flag is meaningless
+        # Ex. 2,4,>5<,5: if you are i=2 and explore i=3 first, it doesn't know it can reach atlantic ocean
         for new_i, new_j in same_heights:            
             ad_pacific_reachable, ad_atlantic_reachable = self.is_reachable(new_i, new_j, passed, pacific_reachable, atlantic_reachable)
             pacific_reachable = ad_pacific_reachable or pacific_reachable
             atlantic_reachable = ad_atlantic_reachable or atlantic_reachable
-            # if (i, j) == (0, 0):
-            #         print(f"new_i:{new_i}, new_j:{new_j}")
-            #         print(f"ad_pacific_reachable:{ad_pacific_reachable}, ad_atlantic_reachable={ad_atlantic_reachable}") 
 
 
         passed.remove((i, j))
