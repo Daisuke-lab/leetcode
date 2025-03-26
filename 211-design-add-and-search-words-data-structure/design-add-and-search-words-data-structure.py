@@ -38,6 +38,8 @@ class WordDictionary:
             result = False
             for next_node in node.next.values():
                 result = self.research(word[1:], next_node) or result
+                if result:
+                    return True
             return result
         else:
             return False
