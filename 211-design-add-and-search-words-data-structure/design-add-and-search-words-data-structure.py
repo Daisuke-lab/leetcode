@@ -1,13 +1,12 @@
 class Trie:
-    def __init__(self, c):
-        self.c = c
+    def __init__(self):
         self.is_end = False
         self.next = {}
 
 class WordDictionary:
 
     def __init__(self):
-        self.root = Trie("")
+        self.root = Trie()
 
     def addWord(self, word: str) -> None:
         self.add(word, self.root)
@@ -19,7 +18,7 @@ class WordDictionary:
         if word[0] in node.next:
             next_node = node.next[word[0]]
         else:
-            next_node = Trie(word[0])
+            next_node = Trie()
             node.next[word[0]] = next_node
         self.add(word[1:], next_node)
         
