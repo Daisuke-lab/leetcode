@@ -10,7 +10,7 @@ class Solution:
             if v not in self.visited:
                 count += 1
                 self.dfs(v, None)
-        print(self.ad_list)
+        #print(self.ad_list)
         return count
 
     def dfs(self, src, parent):
