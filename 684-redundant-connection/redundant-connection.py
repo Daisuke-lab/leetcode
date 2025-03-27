@@ -19,7 +19,7 @@ class UnionFind:
 
         # If already connected
         if v1_parent == v2_parent:
-            return
+            return False
         v1_comp_size = self.size[v1_parent]
         v2_comp_size = self.size[v2_parent]
         
@@ -30,6 +30,7 @@ class UnionFind:
             self.size[v2_parent] += v1_comp_size
             self.parent[v1_parent] = v2_parent
         self.comp_count -= 1
+        return True
 
 class Solution:
     # you should for loop backward
@@ -37,14 +38,10 @@ class Solution:
     # how do you operate remove opeartion in union find.
     def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
         n = len(edges)
-        for i in range(n-1, -1, -1):
-            union_find = UnionFind(n)
-            for j in range(n-1, -1, -1):
-                if i != j:
-                    v1, v2 = edges[j]
-                    union_find.union(v1, v2)
-                # else:
-                #     print("skipping:", edges[j])
-            if union_find.comp_count == 1:
-                return edges[i]
+        union_find = UnionFind(n)
+        for v1, v2 in edges:
+            newly_joint = union_find.union(v1, v2)
+            if not newly_joint:
+                return [v1, v2]
+
         
