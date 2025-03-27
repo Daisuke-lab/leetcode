@@ -14,8 +14,8 @@ class Solution:
         for i in range(len(nums)):
             if nums[i] == dominant_num:
                 dominant_count += 1
-            threshold = ( (i + 1) // 2 ) + 1
-            if dominant_count >= threshold:
+            first_threshold = ( (i + 1) // 2 ) + 1
+            if dominant_count >= first_threshold:
                 remaining_count = count_map[dominant_num] - dominant_count
                 latter_threshold = ( (len(nums) - i - 1) // 2 ) + 1
                 if remaining_count >= latter_threshold:
