@@ -15,6 +15,8 @@ class Solution:
         self.answer.append(src)
 
     def init_ad_list(self, edges):
+        # In Hierholzer's Algorithm, you will add destination first and eventually reverse it
+        # So you want to check lexical bigger airport first.
         edges.sort(reverse=True)
         ad_list = defaultdict(list)
         for src, dest in edges:
