@@ -20,7 +20,7 @@ class Solution:
     # save it to the memo
     # return count
     def coinChange(self, coins: List[int], amount: int) -> int:
-        self.coins = coins
+        self.coins = sorted(coins, reverse=True)
 
         self.memo = {}
         return self.dp(amount)
