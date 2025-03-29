@@ -17,29 +17,27 @@ class Solution:
     # if c[-2] != 0 and c[-2:] < 26 => decode the last two as well
     # decode c[-1] and go to the next recursion
     def numDecodings(self, s: str) -> int:
-        self.memo = {}
-        self.count = 0
-        return self.dp(s)
-
-    def dp(self, s):
-        count = 0
-        if len(s) == 0:
-            return 1
+        self.tab = [0 for i in range(len(s))]
+        self.tab[0] = 1 if s[0] != "0" else 0
         if len(s) == 1:
-            if s[0] != "0":
-                return 1
-            return 0
-        if s in self.memo:
-            return self.memo[s]
-        
-        if int(s[-1]) > 0:
-            count += self.dp(s[:-1])
-        if int(s[-2]) != 0 and int(s[-2:]) <= 26:
-            count += self.dp(s[:-2])
-        self.memo[s] = count
-        return count
+            return self.tab[0]
+        # 0, 1 as 2 chars
+        if s[1] != "0" and s[0] != "0":
+            self.tab[1] += 1
+        # 0, 1 as 1 char
+        if s[0] != "0" and 0 < int(s[:2]) and int(s[:2]) <= 26:
+            self.tab[1] += 1
+        if len(s) == 2:
+            return self.tab[1]
 
-
+        for i in range(2, len(s)):
+            # If you are not 0, you can add patterns you find 0 ~ i-1
+            if s[i] != "0":
+                self.tab[i] += self.tab[i-1]
+            # you i-1~i can be decoded, you can add patterns you find 0 ~ i-2
+            if s[i-1] != "0" and 0 < int(s[i-1:i+1]) and int(s[i-1:i+1]) <= 26:
+                self.tab[i] += self.tab[i-2]
+        return self.tab[-1]
 
 
         
