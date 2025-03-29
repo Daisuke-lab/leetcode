@@ -21,6 +21,7 @@ class Solution:
     # return count
     def coinChange(self, coins: List[int], amount: int) -> int:
         self.coins = coins
+
         self.memo = {}
         return self.dp(amount)
 
