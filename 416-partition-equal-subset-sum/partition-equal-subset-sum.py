@@ -14,24 +14,14 @@ class Solution:
         if num_sum % 2:
             return False
         target = num_sum // 2
-        self.memo = {}
-        self.nums = nums
-        return self.dp(0, target)
-
-    def dp(self, i, target):
-        key = (i, target)
-        if target == 0:
-            return True
-        elif i == len(self.nums):
-            return False
-        elif target < 0:
-            return False
-        elif key in self.memo:
-            return self.memo[key]
-        else:
-            result = self.dp(i+1, target - self.nums[i])
-            result = self.dp(i+1, target) or result
-            self.memo[key] = result
-            return result
+        sum_set = set([0])
+        for num in nums:
+            temp = set(sum_set)
+            for _sum in temp:
+                sum_set.add(_sum + num)
+                if target in sum_set:
+                    return True
+        return False
+        
 
         
