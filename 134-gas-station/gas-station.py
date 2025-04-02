@@ -10,28 +10,37 @@ class Solution:
     # if you reach the positive value in the middle, you can skip to investigate the i => visited(set)
 
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
-        gaps = []
-        starting_points = []
-        visited = set()
-        for i in range(len(gas)):
-            gap = gas[i] - cost[i]
-            gaps.append(gap)
-            if gap >= 0:
-                starting_points.append(i)
 
-        for starting_point in starting_points:
-            if starting_point in visited:
-                continue
-            tank = gaps[starting_point]
-            i = starting_point
-            while True:
-                i = i + 1 if i != len(gaps) -1 else 0
-                tank += gaps[i]
-                if gaps[i] >= 0:
-                    visited.add(i)
-                if tank < 0:
-                    break
-                if i == starting_point:
-                    return starting_point
-        return -1
+
+        i = 0
+        starting_point = None
+        tank = 0
+        started = set()
+        negative = set()
+        while True:
+            gap = gas[i] - cost[i]
+            if gap < 0:
+                negative.add(i)
+            if len(negative) == len(cost):
+                return -1
+
+            if tank >= 0 and starting_point == i:
+                return starting_point
+
+            if starting_point is None and gap >= 0:
+                if i in started:
+                    return -1
+
+                starting_point = i
+                tank = 0
+
+            if starting_point is not None:
+                tank += gap
+
+            if tank >= 0 and starting_point is not None:
+                started.add(i)
+            if tank < 0:
+                starting_point = None
+            i = i + 1 if i != len(cost) -1 else 0
+
                 
