@@ -7,15 +7,16 @@ class Solution:
     # DP
     #
     def maxSubArray(self, nums: List[int]) -> int:
-        tab = [0 for i in range(len(nums))]
+        tab = []
         max_point = nums[0]
         for i in range(len(nums)):
             if i == 0:
-                tab[0] = nums[0]
+                tab.append(nums[0])
             else:
                 if tab[i-1] > 0:
-                    tab[i] = tab[i-1] + nums[i]
+                    tab_num = tab[i-1] + nums[i]
                 else:
-                    tab[i] = nums[i]
+                    tab_num = nums[i]
+                tab.append(tab_num)
                 max_point = max(tab[i], max_point)
         return max_point
