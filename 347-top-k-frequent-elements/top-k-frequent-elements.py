@@ -6,15 +6,17 @@ class Solution:
         count_map = defaultdict(int)
         for num in nums:
             count_map[num] += 1
-        count_map = dict(sorted(count_map.items(), key = lambda item: item[1], reverse=True))
-        answer = []
+        
+        max_heap = []
         for num, count in count_map.items():
+            max_heap.append((-count, num))
+        heapq.heapify(max_heap)
+        answer = []
+        while k > 0:
             k -= 1
-            if k >= 0:
-                answer.append(num)
-            if k ==0:
-                return answer
-            
+            _, num = heapq.heappop(max_heap)
+            answer.append(num)
+        return answer
 
 
 
