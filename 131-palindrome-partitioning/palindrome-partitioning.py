@@ -16,6 +16,7 @@ class Solution:
     def partition(self, s: str) -> List[List[str]]:
         self.answers = []
         self.s = s
+        self.memo = {}
         self.recursion(0, [])
         return self.answers
         
@@ -33,12 +34,16 @@ class Solution:
 
 
     def is_palindrome(self, s):
+        result = False
         if s == "":
-            return False
+            result =  False
         elif len(s) == 1:
-            return True
+            result =  True
         elif len(s) == 2 and s[0] == s[-1]:
-            return True
+            result =  True
+        elif s in self.memo:
+            return self.memo[s]
         elif s[0] == s[-1]:
-            return self.is_palindrome(s[1:-1])
-        return False
+            result =  self.is_palindrome(s[1:-1])
+        self.memo[s] = result
+        return result
