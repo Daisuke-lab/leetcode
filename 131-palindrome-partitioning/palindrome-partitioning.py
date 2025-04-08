@@ -16,19 +16,19 @@ class Solution:
     def partition(self, s: str) -> List[List[str]]:
         self.answers = []
         self.s = s
-        return self.recursion(0)
+        self.recursion(0, [])
+        return self.answers
         
-    def recursion(self, i):
-        answer = []
+    def recursion(self, i, curr):
+        if i == len(self.s):
+            self.answers.append(curr.copy())
+            return
+
         for j in range(i, len(self.s)+1):
             if self.is_palindrome(self.s[i:j]):
-                if j == len(self.s):
-                    answer.append([self.s[i:j]])
-                sub_answers = self.recursion(j)
-                for sub_answer in sub_answers:
-                    sub_answer.insert(0, self.s[i:j])
-                    answer.append(sub_answer)
-        return answer
+                curr.append(self.s[i:j])
+                self.recursion(j, curr)
+                curr.pop()
 
 
 
