@@ -5,18 +5,20 @@ class Solution:
             if palindrome >= n and self.is_prime(palindrome):
                 return palindrome
 
-    def is_prime(self, x):
-        if x < 2:
+    def is_prime(self, n):
+        if n <= 1:
             return False
-        if x == 2:
+        if n <= 3:
             return True
-        if x % 2 == 0:
+        if n % 2 == 0 or n % 3 == 0:
             return False
-        for i in range(3, int(math.sqrt(x)) + 1, 2):
-            if x % i == 0:
+
+        # Only check for divisors up to sqrt(n)
+        # and use 6k ± 1 optimization
+        for i in range(5, int(math.isqrt(n)) + 1, 6):
+            if n % i == 0 or n % (i + 2) == 0:
                 return False
         return True
-
     # Generate palindrome candidates
     def generate_palindromes(self):
         for i in range(1, 10):  # Single digit palindromes
