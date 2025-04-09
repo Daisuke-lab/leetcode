@@ -4,24 +4,21 @@ class Solution:
             return 11
 
         half_size = len(str(n)) // 2
-        for x in range(10 ** half_size, 10**5):
-            #print(x)
-            palindrome = int(str(x) + str(x)[-2::-1])
-            #print(palindrome)
-            if palindrome >= n and self.isPrime(palindrome):
+        for i in range(10**half_size, 10**5):
+            palindrome = int(str(i) + str(i)[-2::-1])
+            if self.is_prime(palindrome) and palindrome >= n:
                 return palindrome
 
-                
-    def isPrime(self, n):
-        if n <= 1:
+
+    def is_prime(self, n):
+        if n < 2:
             return False
-        if n <= 3:
+        elif n < 4:
             return True
-        if n % 2 == 0 or n % 3 == 0:
+        elif n % 2 == 0 or n % 3 == 0:
             return False
-        for i in range(5, int(math.isqrt(n)) + 1, 6):
+        max_divisor = int(math.sqrt(n)) + 1
+        for i in range(5, max_divisor, 6):
             if n % i == 0 or n % (i + 2) == 0:
                 return False
         return True
-
-        
