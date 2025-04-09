@@ -1,20 +1,19 @@
 class Solution:
-    # you want to start faster to elongate length
-    # you want to minimize start to collect elements as many as possible
-    # O(N) is the goal
-    # Brute force is O(N)
-    
-    # You want to start from left is bigger than you
-    # You want to start from right is bigger than you or equal
-    # => equal => whereever you want to start
-    # you can skip number if you go through with smaller number already
-    # the worst case is O(N^2)
-    def lengthOfLIS(self, nums: List[int]) -> int:
-        answer = [1 for i in range(len(nums))]
-        for i in range(len(nums) -2, -1, -1):
-            for j in range(i+1, len(nums)):
-                if nums[i] < nums[j]:
-                    answer[i] = max(answer[i], answer[j] + 1)
-        return max(answer)
+    # every time you have 2 choices either you include current value or not => 2^n
+    # you want to use DP
+    # how can you cache it??
+    # tab [max_length] => n^2
+    # how about top down
+    # you also have a chance to start subseqeuence at any position => O(n)
 
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        tab = [1 for i in range(len(nums))]
+        for i in range(len(nums) -1 , -1, -1):
+            j = i + 1
+            while j < len(nums):
+                if nums[i] < nums[j]:
+                    tab[i] = max(tab[i], tab[j]+1)
+                j += 1
+        return max(tab)
+            
         
