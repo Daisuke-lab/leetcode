@@ -11,9 +11,14 @@ class Solution:
     # I want length at j so far and I want to add 1 for i
     # O(n^2)
     def longestIdealString(self, s: str, k: int) -> int:
-        dp = [0] * 26
-        for ch in s:
-            i = ord(ch) - ord("a")
-            dp[i] = 1 + max(dp[max(0, i - k) : min(26, i + k + 1)])
-        return max(dp)
+        tab = [0] * 26
+        max_length = 0
+        for c in s:
+            i = ord(c) - ord("a")
+            range_start = max(0, i - k)
+            range_end = min(26, i + k + 1)
+            ad_max = max(tab[range_start:range_end])
+            tab[i] = 1 + ad_max
+            max_length = max(tab[i], max_length)
+        return max_length
         
