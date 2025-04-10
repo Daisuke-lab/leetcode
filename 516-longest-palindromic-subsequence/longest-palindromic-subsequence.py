@@ -14,27 +14,24 @@ class Solution:
     # out of bound => 0
     # left != right => return child
     # left == right = return child + 2
+    # O(n^3)
     def longestPalindromeSubseq(self, s: str) -> int:
         self.grid = [[-1 for j in range(len(s))] for i in range(len(s))]
         self.s = s
-        max_length = 0
-        for i in range(len(s)):
-            # odd
-            max_length = max(max_length, self.dp(i-1,i+1) + 1)
-            # event
-            max_length = max(max_length, self.dp(i, i+1))
-        return max_length
+        return self.dp(0, len(s) -1)
 
     def dp(self, l, r):
-        if l < 0 or r == len(self.s):
+        if r < l:
             return 0
+        if l == r:
+            return 1
         elif self.grid[l][r] != -1:
             return self.grid[l][r]
         length = 0
         if self.s[l] == self.s[r]:
             length += 2
-            length += self.dp(l-1, r+1)
+            length += self.dp(l+1, r-1)
         else:
-            length = max(self.dp(l-1, r), self.dp(l, r+1))
+            length = max(self.dp(l+1, r), self.dp(l, r-1))
         self.grid[l][r] = length
         return length       
