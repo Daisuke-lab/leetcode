@@ -30,11 +30,11 @@ class Solution:
     # 
     def maxScore(self, nums1: List[int], nums2: List[int], k: int) -> int:
         res, prefixSum, minHeap = 0, 0, []
-
-        for a, b in sorted(list(zip(nums1, nums2)), key=lambda nums: nums[1], reverse=True):
-            prefixSum += a
-            heappush(minHeap, a)
+        reverse_sorted_nums = sorted(list(zip(nums1, nums2)), key=lambda nums: nums[1], reverse=True)
+        for num1, num2 in reverse_sorted_nums:
+            prefixSum += num1
+            heappush(minHeap, num1)
             if len(minHeap) == k:
-                res = max(res, prefixSum * b)
+                res = max(res, prefixSum * num2)
                 prefixSum -= heappop(minHeap)                           
         return res
