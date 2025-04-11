@@ -1,39 +1,27 @@
 class TimeMap:
 
     def __init__(self):
-        self.map = {}
+        self.store = defaultdict(list)
 
     def set(self, key: str, value: str, timestamp: int) -> None:
-        self.map[key] = self.map.get(key, [])
-        self.map[key].append((timestamp, value))
+        self.store[key].append((timestamp, value))
 
     def get(self, key: str, timestamp: int) -> str:
-        if key not in self.map:
-            return ""
-        pair = self.get_timestamp_prev(key, timestamp)
-        value = pair[1] if pair is not None else ""
-        return value
-
-    def get_timestamp_prev(self, key: str, timestamp: int) -> int:
-        pairs = self.map[key]
+        data = self.store[key]
+        value = ""
         l = 0
-        r = len(pairs) - 1
-        # Find max timestamp less than timestamp
-        timestamp_prev = None
-        #print(pairs)
+        r = len(data) - 1
         while l <= r:
             m = (l + r) // 2
-            if l == r and pairs[m][0] <= timestamp:
-                return pairs[m]
-            if pairs[m][0] == timestamp:
-                return pairs[m]
-            elif pairs[m][0] < timestamp:
+            if data[m][0] == timestamp:
+                value = data[m][1]
+                break
+            elif data[m][0] < timestamp:
+                value = data[m][1]
                 l = m + 1
-                timestamp_prev = pairs[m]
             else:
                 r = m - 1
-        return timestamp_prev
-        
+        return value
 
         
 
