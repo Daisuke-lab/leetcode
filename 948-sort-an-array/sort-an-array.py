@@ -10,8 +10,8 @@ class Solution:
         m = (i + j) //2
         self.mergeSort(i, m)
         self.mergeSort(m+1, j)
-        left_nums = self.nums[i:m+1].copy()
-        right_nums = self.nums[m+1:j+1].copy()
+        left_nums = self.nums[i:m+1]
+        right_nums = self.nums[m+1:j+1]
         #print(left_nums, right_nums)
         while left_nums or right_nums:
             if not left_nums:
