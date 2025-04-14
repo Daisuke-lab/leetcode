@@ -5,48 +5,30 @@
 #         self.left = left
 #         self.right = right
 class Solution:
+
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-        # you keep left making i in preorder as root
-        # if you find the same number in inorder, it means left is None.
-        # you go back to the parent until you see the same number in inorder (hashmap)
-        # and then go right once and keep going left again.
-
-        # 1. pop from preorder
-        # 2. add to the tree, and hashmap
-        # 3. check if it's the same as inorder
-        # 3.1 keep poping (root) until you find the num in hashmap
-        # 4. set root.right = next preorder num 
-        # 5. go right
-        # 6. go back to 1
-
-        # TAKE AWAY
-        # simpel while loop doesn't tell you which direction you should add,
-        # The only way to know is set some flag (direction)
-        # The assumption was to shallow.
-
-        tree = dummy = TreeNode(float("inf"))
+        dummy = TreeNode()
+        queue = collections.deque()
+        queue.append((dummy, "left"))
         node_map = {}
-        direction = "left"
         while preorder:
+            root, direction = queue.pop()
             val = preorder.pop(0)
             node = TreeNode(val)
-            node_map[node.val] = node
+            node_map[val] = node
             if direction == "left":
-                tree.left = node
-                tree = node
+                root.left = node
             else:
-                tree.right = node
-                tree = node
-            direction = "left"
-            while inorder and inorder[0] in node_map:
-                direction = "right"
-                tree = node_map[inorder.pop(0)]
+                root.right = node
+            if val != inorder[0]:
+                queue.append((node, "left"))
+            else:
+                next_node = node
+                while inorder and inorder[0] in node_map:
+                    next_node = node_map[inorder.pop(0)]
+                queue.append((next_node, "right"))
         
         return dummy.left
-            
-            
-        
-                
 
     
         
