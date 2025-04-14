@@ -5,14 +5,25 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    # If root.val == subRoot.val => you want to continue to check if it's the same tree (isSameTree)
-    # If root.val != subRoot.val => you want to check with left and right
-    def serialize(self, root: Optional[TreeNode]) -> str:
-        if root == None:
-            return "$#"
-
-        return ("$" + str(root.val) + self.serialize(root.left) + self.serialize(root.right))  
     def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
-        serialized_root = self.serialize(root)
-        serialized_sub_root = self.serialize(subRoot)
-        return serialized_sub_root in serialized_root
+        return self.recursion(root, subRoot, False)
+
+    def recursion(self, root, subRoot, started):
+        if root is None and subRoot is None:
+            return True
+        elif root is None:
+            return False
+        elif subRoot is None:
+            return False
+        elif root.val != subRoot.val and started is False:
+            return self.recursion(root.left, subRoot, False) or self.recursion(root.right, subRoot, False)
+        elif root.val != subRoot.val and started:
+            return False
+        elif root.val == subRoot.val and started is False:
+            result = self.recursion(root.left, subRoot.left, True) and self.recursion(root.right, subRoot.right, True)
+            if result:
+                return True
+            else:
+                return self.recursion(root.left, subRoot, False) or self.recursion(root.right, subRoot, False)
+        else:
+            return self.recursion(root.left, subRoot.left, True) and self.recursion(root.right, subRoot.right, True)
