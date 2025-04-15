@@ -1,40 +1,29 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         self.ad_list = self.init_ad_list(prerequisites)
-        self.visited = set()
-        self.memo = {}
-        for v in self.ad_list.keys():
-            if v not in self.visited:
-                has_cycle = self.has_cycle(v, set())
-                if has_cycle:
-                    return False
+        for node in self.ad_list:
+            found = self.find_cycle(node, set())
+            if found:
+                return False
         return True
-        
 
-
-    def has_cycle(self, start, visited):
-        self.visited.add(start)
-        if start in visited:
+    def find_cycle(self, node, visited):
+        if node in visited:
             return True
-        if start in self.memo:
-            return self.memo[start]
-        visited.add(start)
-        for v in self.ad_list[start]:
-            has_cycle = self.has_cycle(v, visited)
-            if has_cycle:
-                visited.remove(start)
+        visited.add(node)
+        for ad in self.ad_list[node]:
+            if self.find_cycle(ad, visited):
                 return True
-        # To speed up, when you don't find the cycle, you can make it no prerequisites.
-        #self.ad_list[start] = []
-        self.memo[start] = False
-        visited.remove(start)
+        self.ad_list[node] = []
+        visited.remove(node)
         return False
 
     def init_ad_list(self, edges):
         ad_list = {}
-        for v1, v2 in edges:
-            v1_list = ad_list.get(v1, [])
-            v1_list.append(v2)
-            ad_list[v1] = v1_list
-            ad_list[v2] = ad_list.get(v2, []) 
+        for node1, node2 in edges:
+            node1_ads = ad_list.get(node1, [])
+            node1_ads.append(node2)
+            ad_list[node1] = node1_ads
+            ad_list[node2] = ad_list.get(node2, [])
         return ad_list
+        
