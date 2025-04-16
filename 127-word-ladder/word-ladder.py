@@ -1,41 +1,45 @@
 class Solution:
-    # It can be DP, you change each letter to reach the endWord
-    # you can return the number of changes
-    # you also want to maintain visited (set) to avoid going back to the original string
-    # you can think of this as graph (if only one character is different, it's adjacent)
-    # dijkstra algorrithm
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         if endWord not in wordList:
             return 0
-        words = set(wordList)
-        words.add(beginWord)
-        ad_list = self.init_ad_list(words)
-        queue = collections.deque()
-        queue.append(beginWord)
+        if beginWord not in wordList:
+            wordList.append(beginWord)
+        self.ad_list = self.init_ad_list(wordList)
+        self.dj_map = self.init_dj_map(self.ad_list, beginWord)
+        min_heap = [(1, beginWord)]
         visited = set()
-        count = 0
-        while queue:
-            count += 1
-            for _ in range(len(queue)):
-                word = queue.popleft()
-                #print(word)
-                visited.add(word)
-                if word == endWord:
-                    return count
-                for i in range(len(word)):
-                    pattern = f"{word[:i]}*{word[i+1:]}"
-                    for ad in ad_list[pattern]:
-                        if ad not in visited:
-                            queue.append(ad)
-        return 0
+        while min_heap:
+            distance, word = heapq.heappop(min_heap)
+            if word in visited:
+                continue
+            visited.add(word)
+            for ad in self.ad_list[word]:
+                if self.dj_map[ad] > 1 + distance:
+                    self.dj_map[ad] = 1 + distance
+                if ad not in visited:
+                    heapq.heappush(min_heap, (distance + 1, ad))
+        return self.dj_map[endWord] if self.dj_map[endWord] != float("inf") else 0
 
+    def init_dj_map(self, ad_list, beginWord):
+        # {node: distance}
+        dj_map = {}
+        for node in ad_list:
+            dj_map[node] = float("inf")
+        dj_map[beginWord] = 1
+        return dj_map
 
-        
-    def init_ad_list(self, words):
-        ad_list = defaultdict(set)
-        for word in words:
-            for j in range(len(word)):
-                pattern = f"{word[:j]}*{word[j+1:]}"
-                ad_list[pattern].add(word)
+    def init_ad_list(self, wordList):
+        ad_list = {}
+        words = set(wordList)
+        for word in wordList:
+            for i in range(len(word)):
+                for c in "qwertyuiopasdfghjklzxcvbnm":
+                    ad = f"{word[:i]}{c}{word[i+1:]}"
+                    ads = ad_list.get(word, set())
+                    if ad in words:
+                        ads.add(ad)
+                    ad_list[word] = ads
         return ad_list
+                
+
         
