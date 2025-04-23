@@ -32,7 +32,9 @@ class SegmentTree:
 class Solution:
     def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
         n = len(people)
+        # small heights and big k
         people.sort(key=lambda x: (x[0], -x[1]))
+        print(people)
         res = [[] for _ in range(n)]
 
         segTree = SegmentTree(n)
@@ -41,6 +43,8 @@ class Solution:
             i = 0
             while l <= r:
                 m = (l + r) // 2
+                # when you still have space and you want to put right most position
+                # afterward, you keep putting bigger value, so position of person fixed 100%
                 if segTree.sumRange(0, m) > k:
                     i = m
                     r = m - 1
