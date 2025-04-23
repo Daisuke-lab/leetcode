@@ -28,12 +28,14 @@ class SegmentTree:
             left //= 2
             right //= 2
         return result
+
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
         def compress(arr):
             sortedArr = sorted(set(arr))
             order = []
             for num in arr:
+                # binary search and find index
                 order.append(bisect_left(sortedArr, num))
             return order
         
@@ -41,12 +43,13 @@ class Solution:
         n = len(nums)
         segTree = SegmentTree(n)
 
-        LIS = 0
+        answer = 0
         for num in nums:
-            curLIS = segTree.get_max(0, num - 1) + 1
-            segTree.update(num, curLIS)
-            LIS = max(LIS, curLIS)
-        return LIS
+            # get the max length from the numbers smaller than current
+            max_length = segTree.get_max(0, num - 1)
+            segTree.update(num, max_length+1)
+            answer = max(answer, max_length + 1)
+        return answer
 
         
         
