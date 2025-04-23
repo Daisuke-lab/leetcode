@@ -13,11 +13,13 @@ class SegmentTree:
             self.tree[i] = self.tree[i * 2] + self.tree[i * 2 + 1]
 
     def update(self, i, val):
-        self.tree[self.n + i] = val
-        j = (self.n + i) >> 1
-        while j >= 1:
-            self.tree[j] = self.tree[j << 1] + self.tree[j << 1 | 1]
-            j >>= 1
+        i += self.n
+        diff = val - self.tree[i]
+        self.tree[i] = val
+        i //= 2
+        while i > 0:
+            self.tree[i] = self.tree[i*2] + self.tree[i*2+1]
+            i //= 2
 
     def query(self, l, r):
         res = 0
