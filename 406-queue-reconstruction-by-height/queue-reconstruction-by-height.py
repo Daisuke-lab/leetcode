@@ -21,19 +21,19 @@ class SegmentTree:
             self.tree[i] = self.tree[i*2] + self.tree[i*2+1]
             i //= 2
 
-    def query(self, l, r):
+    def sumRange(self, i, j):
         res = 0
-        l += self.n
-        r += self.n + 1
-        while l < r:
-            if l & 1:
-                res += self.tree[l]
-                l += 1
-            if r & 1:
-                r -= 1
-                res += self.tree[r]
-            l >>= 1
-            r >>= 1
+        i += self.n
+        j += self.n + 1
+        while i < j:
+            if i % 2 == 1:
+                res += self.tree[i]
+                i += 1
+            if j % 2 == 1:
+                j -= 1
+                res += self.tree[j]
+            i >>= 1
+            j >>= 1
         return res
 
 class Solution:
@@ -48,7 +48,7 @@ class Solution:
             idx = 0
             while l <= r:
                 mid = (l + r) >> 1
-                cnt = segTree.query(0, mid)
+                cnt = segTree.sumRange(0, mid)
                 if cnt > p[1]:
                     idx = mid
                     r = mid - 1
