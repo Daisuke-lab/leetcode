@@ -22,19 +22,19 @@ class SegmentTree:
             i //= 2
 
     def sumRange(self, i, j):
-        res = 0
+        answer = 0
         i += self.n
         j += self.n
         while i <= j:
             if i % 2 == 1:
-                res += self.tree[i]
+                answer += self.tree[i]
                 i += 1
             if j % 2 == 0:
-                res += self.tree[j]
+                answer += self.tree[j]
                 j -= 1
             i //= 2
             j //= 2
-        return res
+        return answer
 
 class Solution:
     def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
