@@ -32,8 +32,8 @@ class SegmentTree:
             if j % 2 == 1:
                 j -= 1
                 res += self.tree[j]
-            i >>= 1
-            j >>= 1
+            i //= 2
+            j //= 2
         return res
 
 class Solution:
