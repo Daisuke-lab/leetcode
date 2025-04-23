@@ -1,53 +1,41 @@
 class SegmentTree:
-    def __init__(self):
-        self.sum = 0
-        self.left = None
-        self.right = None
-
-    def build(self, nums, i, j):
-        self.range = [i, j]
-        if i == j:
-            self.sum = nums[i]
-            return self
-        if i > j:
-            return None
-        m = (i + j) // 2
-        self.left = SegmentTree().build(nums, i, m)
-        self.right = SegmentTree().build(nums, m+1, j)
-        self.sum += self.left.sum if self.left else 0
-        self.sum += self.right.sum if self.right else 0
-        return self
-
+    def __init__(self, nums):
+        self.n = len(nums)
+        self.trees = [0] * self.n + nums
+        for i in range(self.n -1, 0, -1):
+            self.trees[i]= self.trees[i*2] + self.trees[i*2+1]
+        #print(self.trees)
+    
     def update(self, i, val):
-        if i == self.range[0] and i == self.range[1]:
-            gap = self.sum - val
-            self.sum = val
-            return gap
-        if self.right and self.right.range[0] <= i and i <= self.right.range[1]:
-            gap = self.right.update(i, val)
-        else:
-            gap = self.left.update(i, val)
-        self.sum -= gap
-        return gap
-
+        i += self.n
+        diff = val - self.trees[i]
+        self.trees[i] = val
+        i //= 2
+        while i > 0:
+            self.trees[i] += diff
+            i //= 2
+    
     def sumRange(self, i, j):
-        if i == self.range[0] and j == self.range[1]:
-            return self.sum
-        if self.left and self.left.range[0] <= i and j <= self.left.range[1]:
-            return self.left.sumRange(i, j)
-        elif self.right and self.right.range[0] <= i and j <= self.right.range[1]:
-            return self.right.sumRange(i, j)
-        else:
-            left_j = self.left.range[1]
-            right_i = self.right.range[0]
-            return self.left.sumRange(i, left_j) + self.right.sumRange(right_i, j)
+        i += self.n
+        j += self.n
+        answer = 0
+        while i <= j:
+            if i % 2 == 1:
+                answer += self.trees[i]
+                i += 1
+            if j % 2 == 0:
+                answer += self.trees[j]
+                j -= 1
+            i //= 2
+            j //= 2
+        return answer
+        
              
 
 class NumArray:
 
     def __init__(self, nums: List[int]):
-        self.root = SegmentTree()
-        self.root.build(nums, 0, len(nums) - 1)
+        self.root = SegmentTree(nums)
         #print(self.root.sum)
         
 
