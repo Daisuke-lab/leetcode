@@ -24,14 +24,14 @@ class SegmentTree:
     def sumRange(self, i, j):
         res = 0
         i += self.n
-        j += self.n + 1
-        while i < j:
+        j += self.n
+        while i <= j:
             if i % 2 == 1:
                 res += self.tree[i]
                 i += 1
-            if j % 2 == 1:
-                j -= 1
+            if j % 2 == 0:
                 res += self.tree[j]
+                j -= 1
             i //= 2
             j //= 2
         return res
