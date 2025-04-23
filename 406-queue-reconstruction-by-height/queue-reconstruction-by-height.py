@@ -1,14 +1,10 @@
 class SegmentTree:
     def __init__(self, n):
         self.n = n
-        # while (self.n & (self.n - 1)) != 0:
-        #     self.n += 1
         self.build(n)
 
     def build(self, n):
-        self.tree = [0] * (2 * self.n)
-        for i in range(n):
-            self.tree[self.n + i] = 1
+        self.tree = [1] * (2 * self.n)
         for i in range(self.n - 1, 0, -1):
             self.tree[i] = self.tree[i * 2] + self.tree[i * 2 + 1]
 
