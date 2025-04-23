@@ -10,7 +10,7 @@ class SegmentTree:
         for i in range(n):
             self.tree[self.n + i] = 1
         for i in range(self.n - 1, 0, -1):
-            self.tree[i] = self.tree[i << 1] + self.tree[i << 1 | 1]
+            self.tree[i] = self.tree[i * 2] + self.tree[i * 2 + 1]
 
     def update(self, i, val):
         self.tree[self.n + i] = val
