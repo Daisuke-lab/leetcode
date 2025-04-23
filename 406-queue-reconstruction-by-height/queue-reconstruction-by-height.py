@@ -1,8 +1,8 @@
 class SegmentTree:
     def __init__(self, n):
         self.n = n
-        while (self.n & (self.n - 1)) != 0:
-            self.n += 1
+        # while (self.n & (self.n - 1)) != 0:
+        #     self.n += 1
         self.build(n)
 
     def build(self, n):
