@@ -2,28 +2,27 @@
 
 
 class Solution:
-    # Same word can be used multiple times
-    # shift s until you find the word
-    # if you find word, reduce string and dp
-    # self.memo = {word: True}
-    # I want to make trie
+    # memo [i] = true/false
+    # 
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        tab = [False for i in range(len(s) + 1)]
-        tab[-1] = True
-        for i in range(len(s) - 1, -1, -1):
-            for word in wordDict:
-                curr_length = len(s) - i + 1
-                curr_word = s[i:i+len(word)]
-                if curr_length < len(word):
-                    continue
-                if curr_word == word:
-                    tab[i] = tab[i + len(word)]
-                if tab[i]:
-                    break
-        return tab[0]
-                
+        self.tab = [None for i in range(len(s))]
+        self.words = set(wordDict)
+        self.s = s
+        return self.dp(0)
 
 
-
+    def dp(self, i):
+        if i == len(self.s):
+            return True
+        if self.tab[i] != None:
+            return self.tab[i]
+        result = False
+        for j in range(i, len(self.s)):
+            subs = self.s[i:j+1]
+            if subs in self.words and self.dp(j+1):
+                result = True
+                break
+        self.tab[i] = result
+        return result
 
         
