@@ -12,6 +12,9 @@ class Solution:
         self.n = n
         self.index = index
 
+        # Because you don't want to calculate flattened area [2,1,1,1]
+        #                                                      ------
+        # you assume it has all one at foundation (maxSum -=n)
         maxSum -= n
         left, right = 0, maxSum
         while left < right:
