@@ -7,14 +7,14 @@ class Solution:
                 for j in range(2)]
                 for i in range(32)]
         self.n = str(bin(n)[2:])
-        print(self.n)
+        #print(self.n)
         return self.dp(0, 1, 0)
 
 
     def dp(self, pos, tight, prev):
         if pos == len(self.n):
             return 1
-        print(pos, tight, prev)
+        #print(pos, tight, prev)
         if self.memo[pos][tight][prev] != -1:
             return self.memo[pos][tight][prev]
         result = 0
