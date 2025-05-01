@@ -25,6 +25,7 @@ class Solution:
             if unvisited:
                 new_visited = visited | (1 << i)
                 new_rem = (rem * self.power[i] + self.nums[i]) % self.k
+                new_rem = int(str(rem) + str(self.nums[i])) % self.k
                 result = self.dp(new_visited, new_rem)
                 if result is not None:
                     result = [self.nums[i]] + result
