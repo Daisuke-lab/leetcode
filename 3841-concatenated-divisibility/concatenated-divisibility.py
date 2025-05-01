@@ -5,7 +5,7 @@ class Solution:
         self.k = k
         self.nums = nums
         self.all_visited = (1 << len(nums)) - 1
-        self.power = [pow(10, len(str(num)), k) for num in nums]
+        self.power = [10**len(str(num)) % k for num in nums]
         self.indices = sorted(range(len(nums)), key=lambda i: nums[i])
         self.memo = [[
             -1 for i in range(k)]
