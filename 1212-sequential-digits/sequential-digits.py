@@ -31,7 +31,12 @@ class Solution:
         if high_tight:
             end = int(self.high[pos])
         prev_digit = int(curr[-1]) if len(curr) > 0 else None
-        if prev_digit is None:
+        leading_zeros = len(curr) if curr and curr[-1] == "0" else 0
+        if self.gap > 0 and leading_zeros == self.gap:
+            low_tight = True
+            start = int(self.low[pos])
+
+        if leading_zeros > 0 or prev_digit is None:
             for digit in range(start, end + 1):
                 next_low_tight = False
                 next_high_tight = False
@@ -39,33 +44,15 @@ class Solution:
                     next_low_tight = True
                 if high_tight and digit == end:
                     next_high_tight = True
-                self.recursion(pos + 1, str(digit), next_low_tight, next_high_tight)
-        else:
-            leading_zeros = len(curr) if curr and curr[-1] == "0" else 0
-            if leading_zeros == 0:
-                digit = prev_digit + 1
-                if digit < start or digit > end:
-                    return
-                next_low_tight = True if low_tight and digit == start else False
-                next_high_tight = True if high_tight and digit == end else False
                 self.recursion(pos + 1, curr + str(digit), next_low_tight, next_high_tight)
-            else:
-                if self.gap > 0 and leading_zeros == self.gap:
-                    # you want to make it low_tight
-                    #print("Position:", pos)
-                    low_tight = True
-                    start = int(self.low[pos])
+        else:
+            digit = prev_digit + 1
+            if digit < start or digit > end:
+                return
+            next_low_tight = True if low_tight and digit == start else False
+            next_high_tight = True if high_tight and digit == end else False
+            self.recursion(pos + 1, curr + str(digit), next_low_tight, next_high_tight)
 
-                    # you also want to start iteration
-                for digit in range(start, end + 1):
-                    next_low_tight = False
-                    next_high_tight = False
-                    if low_tight and digit == start:
-                        next_low_tight = True
-                    if high_tight and digit == end:
-                        next_high_tight = True
-                    self.recursion(pos + 1, curr + str(digit), next_low_tight, next_high_tight)
-            
             
 
 
