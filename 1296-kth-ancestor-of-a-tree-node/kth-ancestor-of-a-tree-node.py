@@ -22,8 +22,9 @@ class TreeAncestor:
 
 
     def getKthAncestor(self, node: int, k: int) -> int:
-        for i in range(32):
-            if k & (1 << i):  # if the i-th bit in k is set
+        for i in range(self.lift_height):
+            # if k = 2^i + p
+            if k & (1 << i): 
                 node = self.ancestors[node][i]
                 if node == -1:
                     return -1  # No such ancestor
