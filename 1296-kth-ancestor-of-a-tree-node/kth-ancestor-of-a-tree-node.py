@@ -18,7 +18,7 @@ class TreeAncestor:
                 prev = self.ancestors[node][jump - 1]
                 if prev != -1:
                     self.ancestors[node][jump] = self.ancestors[prev][jump - 1]
-        print(self.ancestors)
+        #print(self.ancestors)
 
 
     def getKthAncestor(self, node: int, k: int) -> int:
