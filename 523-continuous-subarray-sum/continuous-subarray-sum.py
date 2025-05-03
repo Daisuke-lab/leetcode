@@ -1,23 +1,15 @@
 class Solution:
-    # Brute Force => 2^n
-    # DP => n^2
-    # memo[(curr, i)] = true/false
-    # because it's true or false, you can use set() instead
-    # you can only carry around reminder
-    # n*k
-
-    # 2n
     def checkSubarraySum(self, nums: List[int], k: int) -> bool:
-        rem_map = {0: -1}
-        curr = 0
-
+        rem_map = {}
+        rem = 0
         for i, num in enumerate(nums):
-            curr += num
-            reminder = curr % k
-            if reminder in rem_map and i- rem_map[reminder] > 1:
+            rem = (rem + num) % k
+            if rem == 0 and i + 1 >= 2:
                 return True
-            if reminder not in rem_map:
-                rem_map[reminder] = i
+            if rem in rem_map and i - rem_map[rem] >= 2:
+                return True
+            elif rem not in rem_map:
+                rem_map[rem] = i
         return False
         
           
