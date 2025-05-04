@@ -1,26 +1,26 @@
 class Solution:
-    # if it's all positive, multply everything
-    # if it has even number of negatives, multiply everything
-    # if it has odd number of negatives, you should ignore the first or last negative
-    
-    # if you have 0, think of it as dividor of array
+    # If it's all positive, multitply everything
+    # If you have negatives, don't include the last negative and multiply everything
+    # If you have 0, you can think of it as subaary
     def maxProduct(self, nums: List[int]) -> int:
-        max_product = -float("inf")
-        curr = 1
+        max_product = nums[0]
+        current_product = 1
         for num in nums:
             if num == 0:
-                curr = 1
                 max_product = max(0, max_product)
+                current_product = 1
             else:
-                curr *= num
-                max_product = max(curr, max_product)
-
-        curr = 1
-        for i in range(len(nums) -1, -1, -1):
-            if nums[i] == 0:
-                curr = 1
-                max_product = max(0, max_product)
+                current_product *= num
+                max_product = max(current_product, max_product)
+        
+        current_product = 1
+        for i in range(len(nums) - 1, -1, -1):
+            num = nums[i]
+            if num == 0:
+                current_product = 1
             else:
-                curr *= nums[i]
-                max_product = max(curr, max_product)
+                current_product *= num
+                max_product = max(current_product, max_product)
         return max_product
+
+ 
