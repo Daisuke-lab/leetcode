@@ -4,21 +4,19 @@ class Solution {
     public List<List<Integer>> permute(int[] nums) {
         permutations = new ArrayList<>();
         this.nums = nums;
-        backtrack(new ArrayList<>(), new HashSet<>());
+        backtrack(new ArrayList<>());
         return permutations;
     }
 
-    public void backtrack(List<Integer> curr, Set<Integer> visited) {
+    public void backtrack(List<Integer> curr) {
         if (curr.size() == nums.length) {
             permutations.add(new ArrayList<>(curr));
         } else {
             for (int num: nums) {
-                if (!visited.contains(num)) {
+                if (!curr.contains(num)) {
                     curr.add(num);
-                    visited.add(num);
-                    backtrack(curr, visited);
+                    backtrack(curr);
                     curr.remove(curr.size() - 1);
-                    visited.remove(num);
                 }
             }
         }
