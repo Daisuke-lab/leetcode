@@ -1,7 +1,7 @@
 class Solution:
     def minTravelTime(self, l: int, n: int, k: int, positions: List[int], times: List[int]) -> int:
         self.time_prefix_sums = self.get_prefix_sums(times)
-        print(self.time_prefix_sums)
+        #print(self.time_prefix_sums)
         self.positions = positions
         self.n = n
         self.memo = [[[
