@@ -30,7 +30,7 @@ class Solution:
         result = float("inf")
         original_k = k
         till = min(self.n - 1, j + k + 1)
-        for next_j in range(j+1, till + 1):
+        for next_j in range(j+1, self.n):
             if k < 0:
                 break
             distance = self.positions[next_j] - self.positions[j]
