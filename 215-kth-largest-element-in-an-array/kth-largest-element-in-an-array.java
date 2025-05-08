@@ -26,7 +26,7 @@ class Solution {
             while (i <= j && nums[j] > pivotNum) {
                 j--;
             }
-            if (i <= j) {
+            if (i < j) {
                 int temp = nums[i];
                 nums[i] = nums[j];
                 nums[j] = temp;
