@@ -22,7 +22,7 @@ class Solution {
             while (i <= j && nums[i] < pivotNum) {
                 i++;
             }
-            while (i <= j && nums[j] >= pivotNum) {
+            while (i <= j && nums[j] > pivotNum) {
                 j--;
             }
             if (i < j) {
