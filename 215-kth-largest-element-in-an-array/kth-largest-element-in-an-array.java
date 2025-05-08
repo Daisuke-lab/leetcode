@@ -9,10 +9,6 @@ class Solution {
         if (left == right) {
             return nums[left];
         }
-        // System.out.println("--------------------------");
-        // System.out.println(left);
-        // System.out.println(right);
-        // System.out.println(k);
         int pivotIndex = getPivot(left, right);
         int pivotNum = nums[pivotIndex];
         nums[pivotIndex] = nums[right];
@@ -20,10 +16,13 @@ class Solution {
         int i = left;
         int j = right - 1;
         while (true) {
+             // [4, 5, 7, 6] pivot = 6
+             //        \U0001f446 you want to swap this and pivot
+             // But i and j meets at index 1 (num = 5), so You need to conditino i <= j not i < j
             while (i <= j && nums[i] < pivotNum) {
                 i++;
             }
-            while (i <= j && nums[j] > pivotNum) {
+            while (i <= j && nums[j] >= pivotNum) {
                 j--;
             }
             if (i < j) {
