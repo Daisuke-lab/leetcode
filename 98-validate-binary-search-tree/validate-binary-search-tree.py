@@ -11,13 +11,16 @@ class Solution:
     # you want to create a new function
     # if both are
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        return self.dfs(root, -float("inf"), float("inf"))
+        return self.recursion(root, -float("inf"))[0]
 
-    def dfs(self, root, min_value, max_value):
-        if root is None:
-            return True
-        if root.val <= min_value:
-            return False
-        elif root.val >= max_value:
-            return False
-        return self.dfs(root.left, min_value, root.val) and self.dfs(root.right, root.val, max_value)
+    def recursion(self, root, curr):
+        if root == None:
+            return True, curr
+        result, latest = self.recursion(root.left, curr)
+        if result is False:
+            return False, float("inf")
+        if latest < root.val:
+            return self.recursion(root.right, root.val)
+        else:
+            return False, float("inf")
+            
