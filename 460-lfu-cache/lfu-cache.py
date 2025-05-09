@@ -6,6 +6,11 @@ class DoublyLinkedNode:
         self.prev = None
         self.next = None
         self.count = 1
+
+    def is_only_node_with_this_count(self):
+        return self.prev.count != self.count and self.next.count != self.count
+    def is_top_node(self):
+        return self.next.count != self.count
         
 class LFUCache:
 
@@ -34,6 +39,12 @@ class LFUCache:
         else:
             return self.head.prev.count
 
+    def is_only_node_with(self, count):
+        return node.prev.count != node.count and node.next.count != node.count
+
+    def is_top_node_with(self, count, node):
+        self.count_map[node.count] == node
+
     def print_list(self):
         head = self.tail.next
         while head != self.head:
@@ -51,13 +62,12 @@ class LFUCache:
         tail = None
         head = None
         # when curr node is the only node for this count
-        if node.prev.count != node.count and node.next.count != node.count:
+        if node.is_only_node_with_this_count():
             del self.count_map[node.count]
             tail = node.prev
             head = node.next
-        else:
-            if self.count_map[node.count] == node:
-                self.count_map[node.count] = node.prev
+        elif node.is_top_node():
+            self.count_map[node.count] = node.prev
         del self.key_map[key]
         node.prev.next = node.next
         node.next.prev = node.prev
@@ -73,19 +83,13 @@ class LFUCache:
             head = self.count_map[node.count].next
             tail = self.count_map[node.count]
         else:
-            # what if frequency (3,4) exists, and you are inserting 1
-            # you don't know where to connect. Not like LRU cache, you can not choose head.prev as insertion point
-            # you want to maintain each frequent tail and head
             if node.count < self.get_min_count():
                 tail = self.tail
                 head = self.tail.next
             elif node.count > self.get_max_count():
                 tail = self.head.prev
                 head = self.head
-            #else:
-                #print("you are here")
-                # self.print_node(tail, True)
-                # self.print_node(tail.next, True)
+
         node.next = head
         node.prev = tail
         head.prev = node
