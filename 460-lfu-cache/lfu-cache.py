@@ -10,10 +10,6 @@ class DoublyLinkedNode:
 class LFUCache:
 
     def __init__(self, capacity: int):
-        # used when you connect it to tail
-        self.min_count = float("inf")
-        # used when you connect it to head
-        self.max_count = 0
         self.head = DoublyLinkedNode()
         self.tail = DoublyLinkedNode()
         self.head.prev = self.tail
@@ -26,6 +22,17 @@ class LFUCache:
     
     def is_empty(self):
         return self.head.prev == self.tail and self.tail.next == self.head
+
+    def get_min_count(self):
+        if self.is_empty():
+            return float("inf")
+        else:
+            return self.tail.next.count
+    def get_max_count(self):
+        if self.is_empty():
+            return 0
+        else:
+            return self.head.prev.count
 
     def print_list(self):
         head = self.tail.next
@@ -55,10 +62,6 @@ class LFUCache:
         node.prev.next = node.next
         node.next.prev = node.prev
 
-        if self.min_count not in self.count_map:
-            self.min_count = node.next.count
-        if self.is_empty():
-            self.max_count = 0
         if tail is None:
             tail = self.count_map[node.count]
             head = tail.next
@@ -73,10 +76,10 @@ class LFUCache:
             # what if frequency (3,4) exists, and you are inserting 1
             # you don't know where to connect. Not like LRU cache, you can not choose head.prev as insertion point
             # you want to maintain each frequent tail and head
-            if node.count < self.min_count:
+            if node.count < self.get_min_count():
                 tail = self.tail
                 head = self.tail.next
-            elif node.count > self.max_count:
+            elif node.count > self.get_max_count():
                 tail = self.head.prev
                 head = self.head
             #else:
@@ -88,8 +91,6 @@ class LFUCache:
         head.prev = node
         tail.next = node
         self.count_map[node.count] = node
-        self.min_count = min(self.min_count, node.count)
-        self.max_count = max(self.max_count, node.count)
 
     def get(self, key: int) -> int:
         #print("GET::", key)
