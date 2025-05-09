@@ -17,10 +17,8 @@ class Solution:
         if root == None:
             return True, curr
         result, latest = self.recursion(root.left, curr)
-        if result is False:
-            return False, float("inf")
-        if latest < root.val:
+        if result is True and latest < root.val:
             return self.recursion(root.right, root.val)
         else:
-            return False, float("inf")
+            return False, 0
             
