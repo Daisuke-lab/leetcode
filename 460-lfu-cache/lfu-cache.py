@@ -40,8 +40,8 @@ class LFUCache:
             return self.head.prev.count
 
 
-    def remove(self, key):
-        node = self.key_map[key]
+    def remove(self, node):
+        key = node.key
         tail = None
         head = None
         if node.is_only_node_with_this_count():
@@ -83,7 +83,7 @@ class LFUCache:
         result = -1
         if key in self.key_map:
             node = self.key_map[key]
-            tail, head = self.remove(key)
+            tail, head = self.remove(node)
             node.count += 1
             self.insert(node, tail, head)
             result = node.value
@@ -95,12 +95,12 @@ class LFUCache:
         if key in self.key_map:
             node = self.key_map[key]
             node.value = value
-            tail, head = self.remove(key)
+            tail, head = self.remove(node)
             node.count += 1
             self.insert(node, tail, head)
         else:
             if len(self.key_map) == self.capacity:
-                self.remove(self.tail.next.key)
+                self.remove(self.tail.next)
             node = DoublyLinkedNode(key, value)
             self.insert(node)
         #self.print_list()
