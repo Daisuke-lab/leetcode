@@ -19,7 +19,7 @@ class LFUCache:
         self.tail = DoublyLinkedNode()
         self.head.prev = self.tail
         self.tail.next = self.head
-        self.tail.count = -1
+        self.tail.count = 0
         self.head.count = float("inf")
         self.key_map = {}
         self.count_map = {}
@@ -39,29 +39,11 @@ class LFUCache:
         else:
             return self.head.prev.count
 
-    def is_only_node_with(self, count):
-        return node.prev.count != node.count and node.next.count != node.count
-
-    def is_top_node_with(self, count, node):
-        self.count_map[node.count] == node
-
-    def print_list(self):
-        head = self.tail.next
-        while head != self.head:
-            self.print_node(head)
-            head = head.next
-    def print_node(self, node, debug=False):
-        if debug:
-            print("##############")
-        print(f"FREQ:{node.count}, KEY:{node.key}, VAL: {node.value}")
-        if debug:
-            print("##############")
 
     def remove(self, key):
         node = self.key_map[key]
         tail = None
         head = None
-        # when curr node is the only node for this count
         if node.is_only_node_with_this_count():
             del self.count_map[node.count]
             tail = node.prev
