@@ -15,7 +15,7 @@ class Solution {
         nums[right] = pivotNum;
         int i = left;
         int j = right - 1;
-        while (true) {
+        while (i <= j) {
              // [4, 5, 7, 6] pivot = 6
              //        \U0001f446 you want to swap this and pivot
              // But i and j meets at index 1 (num = 5), so You need to conditino i <= j not i < j
@@ -25,14 +25,12 @@ class Solution {
             while (i <= j && nums[j] > pivotNum) {
                 j--;
             }
-            if (i < j) {
+            if (i <= j) {
                 int temp = nums[i];
                 nums[i] = nums[j];
                 nums[j] = temp;
                 i++;
                 j--;
-            } else {
-                break;
             }
         }
         nums[right] = nums[i];
