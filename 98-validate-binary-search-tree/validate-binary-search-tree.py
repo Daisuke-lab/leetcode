@@ -11,14 +11,14 @@ class Solution:
     # you want to create a new function
     # if both are
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        return self.recursion(root, -float("inf"))[0]
+        return self.recursion(root, -float("inf")) != float("inf")
 
     def recursion(self, root, curr):
         if root == None:
-            return True, curr
-        result, latest = self.recursion(root.left, curr)
-        if result is True and latest < root.val:
+            return curr
+        latest = self.recursion(root.left, curr)
+        if latest != float("inf") and latest < root.val:
             return self.recursion(root.right, root.val)
         else:
-            return False, 0
+            return float("inf")
             
