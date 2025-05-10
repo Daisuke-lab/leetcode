@@ -23,7 +23,7 @@ class Solution:
                 result = self.bs(m+1, r, False)
             else:
                 result = self.bs(m+1, r, True)
-            if self.nums[l] > self.nums[r]:
+            if self.nums[l] > self.nums[m]:
                 result = self.bs(l, m -1, False) if result == -1 else result
             else:
                 result = self.bs(l, m -1, True) if result == -1 else result
