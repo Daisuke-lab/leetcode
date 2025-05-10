@@ -1,23 +1,31 @@
 class Solution:
+    # sorted => one way
+    # unkonwn => two way
     def search(self, nums: List[int], target: int) -> int:
-        queue = collections.deque()
-        i = 0
-        j = len(nums) -1 
-        queue.append((i, j, False))
-        while queue:
-            l, r, pivot_found = queue.popleft()
-            next_pivot_found = pivot_found
-            m = (l + r) // 2
-            if nums[m] == target:
-                return m
-            # pivot found
-            if m < len(nums) - 1 and nums[m] > nums[m+1]:
-                next_pivot_found = True
-            elif m > 0 and nums[m-1] > nums[m]:
-                next_pivot_found = True
-            if (l <= m - 1) and (pivot_found is False or target < nums[m]):
-                queue.append((l, m-1, next_pivot_found))
-            if r >= m + 1 and (pivot_found is False or target > nums[m]):
-                queue.append((m+1, r, next_pivot_found))
+        self.nums = nums
+        self.target = target
+        return self.bs(0, len(nums) -1, False)
 
-        return -1
+    def bs(self, l, r, figured):
+        if l > r:
+            return -1
+        m = (l + r) //2
+        result = -1
+        if self.nums[m] == self.target:
+            return m
+        if figured:
+            if self.nums[m] < self.target:
+                return self.bs(m + 1, r, True)
+            else:
+                return self.bs(l, m -1, True)
+        else:
+            if self.nums[m] > self.nums[r]:
+                result = self.bs(m+1, r, False)
+            else:
+                result = self.bs(m+1, r, True)
+            if self.nums[l] > self.nums[r]:
+                result = self.bs(l, m -1, False) if result == -1 else result
+            else:
+                result = self.bs(l, m -1, True) if result == -1 else result
+        return result
+            
