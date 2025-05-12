@@ -14,8 +14,6 @@ class Solution:
                 if matrix[i][j] == '1':
                     ensured_length = min(grid[i-1][j], grid[i][j-1])
                     possible_length = ensured_length + 1
-                    # if possible_length == 3:
-                    #     print(i, j)
                     dig_i = i - (possible_length - 1)
                     dig_j = j - (possible_length - 1)
                     if matrix[dig_i][dig_j] == "1":
@@ -25,5 +23,4 @@ class Solution:
                     else:
                         grid[i][j] = 1
                     max_length = max(max_length, grid[i][j])
-        print(grid)
         return max_length**2
