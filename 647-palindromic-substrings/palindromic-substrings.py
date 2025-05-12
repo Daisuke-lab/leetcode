@@ -1,20 +1,22 @@
 class Solution:
-    # Again. start from center
-    # Because everytime, you select a different center, it's going to be a different answer
     def countSubstrings(self, s: str) -> int:
-        count = 0
-        for i in range(len(s)):
-            l = r = i
-            while l >= 0 and r < len(s) and s[l] == s[r]:
-                count += 1
-                l -= 1
-                r += 1
-        for i in range(len(s) -1):
-            l = i
-            r = i + 1
-            while l >= 0 and r < len(s) and s[l] == s[r]:
-                count += 1
-                l -= 1
-                r += 1
-        return count
+
+        def manacher(s):
+            t = '#' + '#'.join(s) + '#'
+            n = len(t)
+            p = [0] * n
+            l, r = 0, 0
+            for i in range(n):
+                p[i] = min(r - i, p[l + (r - i)]) if i < r else 0
+                while (i + p[i] + 1 < n and i - p[i] - 1 >= 0 
+                       and t[i + p[i] + 1] == t[i - p[i] - 1]):
+                    p[i] += 1
+                if i + p[i] > r:
+                    l, r = i - p[i], i + p[i]
+            return p
         
+        p = manacher(s)
+        res = 0
+        for i in p:
+            res += (i + 1) // 2
+        return res
