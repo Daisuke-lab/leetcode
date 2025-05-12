@@ -17,7 +17,7 @@ class Solution:
                 l -= 1
                 r += 1
                 radius += 1
-            if i + radius > right:
+            if r > right:
                 center, right = i, i + radius
             pali_radiuses[i] = radius
             count += (radius + 1) // 2
