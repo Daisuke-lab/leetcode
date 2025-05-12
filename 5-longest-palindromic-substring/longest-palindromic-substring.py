@@ -1,25 +1,26 @@
 class Solution:
-    # If you fixing the middle, it can be easy
-    # n^2
+
     def longestPalindrome(self, s: str) -> str:
-        # Make "s" to odd radius "t"
+        # Make "s" to odd length "t"
+        # ABBA => #A#B#B#A# can be considerd as palindrome at # as center
+        # ^ and $ make sure it doesn't include # as a part of palindroe in algorithm.
         t = "^#" + "#".join(s) + "#$"
         n = len(t)
         # max radius of palindrome starting from i
         pali_radiuses = [0] * n
         center = right = 0
 
-        for i in range(1, n - 1):
+        for i in range(2, n - 2):
+            # 
             mirror = 2 * center - i
             radius = 0
-            #print(pali_radiuses)
 
             # If i is a part of the previous biggest palindrome
             # you can estimate "palindrome radius" has at least mirrored center of palindrome
             if i < right:
                 radius = min(right - i, pali_radiuses[mirror])
-            print(radius)
-            # You don't have to divide the radius by "2"! because t has many "#" so index is double size.
+
+
             l = i - (radius + 1)
             r = i + (radius + 1)
             while t[l] == t[r]:
@@ -42,4 +43,3 @@ class Solution:
         start = (center_index - max_len) // 2
         return s[start: start + max_len]
 
-                        
