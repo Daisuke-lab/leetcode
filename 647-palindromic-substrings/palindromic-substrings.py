@@ -7,15 +7,15 @@ class Solution:
             pali_radiuses = [0] * n
             left, right = 0, 0
             for i in range(n):
+                radius = 0
                 if i < right:
-                    pali_radiuses[i] = min(r - i, pali_radiuses[l + (r - i)])
-                else:
-                    pali_radiuses[i] = 0
-                while (i + pali_radiuses[i] + 1 < n and i - pali_radiuses[i] - 1 >= 0 
-                       and t[i + pali_radiuses[i] + 1] == t[i - pali_radiuses[i] - 1]):
-                    pali_radiuses[i] += 1
-                if i + pali_radiuses[i] > right:
-                    l, r = i - pali_radiuses[i], i + pali_radiuses[i]
+                    radius = min(right - i, pali_radiuses[left + (right - i)])
+                while (i + radius + 1 < n and i - radius - 1 >= 0 
+                       and t[i + radius + 1] == t[i - radius - 1]):
+                    radius += 1
+                if i + radius > right:
+                    left, right = i - radius, i + radius
+                pali_radiuses[i] = radius
             return pali_radiuses
         
         p = manacher(s)
