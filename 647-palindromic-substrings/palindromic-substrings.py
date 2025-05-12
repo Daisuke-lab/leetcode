@@ -2,18 +2,18 @@ class Solution:
     def countSubstrings(self, s: str) -> int:
 
         def manacher(s):
-            t = '#' + '#'.join(s) + '#'
+            t = '^#' + '#'.join(s) + '#$'
             n = len(t)
-            p = [0] * n
+            pali_radiuses = [0] * n
             l, r = 0, 0
             for i in range(n):
-                p[i] = min(r - i, p[l + (r - i)]) if i < r else 0
-                while (i + p[i] + 1 < n and i - p[i] - 1 >= 0 
-                       and t[i + p[i] + 1] == t[i - p[i] - 1]):
-                    p[i] += 1
-                if i + p[i] > r:
-                    l, r = i - p[i], i + p[i]
-            return p
+                pali_radiuses[i] = min(r - i, pali_radiuses[l + (r - i)]) if i < r else 0
+                while (i + pali_radiuses[i] + 1 < n and i - pali_radiuses[i] - 1 >= 0 
+                       and t[i + pali_radiuses[i] + 1] == t[i - pali_radiuses[i] - 1]):
+                    pali_radiuses[i] += 1
+                if i + pali_radiuses[i] > r:
+                    l, r = i - pali_radiuses[i], i + pali_radiuses[i]
+            return pali_radiuses
         
         p = manacher(s)
         res = 0
