@@ -10,8 +10,11 @@ class Solution:
                 radius = 0
                 if i < right:
                     radius = min(right - i, pali_radiuses[left + (right - i)])
-                while (i + radius + 1 < n and i - radius - 1 >= 0 
-                       and t[i + radius + 1] == t[i - radius - 1]):
+                l = i - radius - 1
+                r = i + radius + 1
+                while l >= 0 and r < n and t[l] == t[r]:
+                    l -= 1
+                    r += 1
                     radius += 1
                 if i + radius > right:
                     left, right = i - radius, i + radius
