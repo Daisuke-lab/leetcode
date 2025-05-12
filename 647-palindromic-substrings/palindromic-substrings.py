@@ -5,7 +5,7 @@ class Solution:
         pali_radiuses = [0] * n
         center, right = 0, 0
         count = 0
-        for i in range(n):
+        for i in range(2, n-2):
             radius = 0
             if i < right:
                 distance = i - center
