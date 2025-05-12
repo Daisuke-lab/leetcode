@@ -23,11 +23,12 @@ class Solution:
                 r += 1
                 radius += 1
             pali_radiuses[i] = radius
-            if r > right:
+            if r - 1 > right:
                 center = i
-                right = r
-        max_length = max(pali_radiuses)
-        index = pali_radiuses.index(max_length)
+                right = r - 1
+        max_radius = max(pali_radiuses)
+        index = pali_radiuses.index(max_radius)
+        max_length = max_radius
         start = (index - max_length) // 2
         return s[start:start + max_length]
             
