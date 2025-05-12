@@ -11,35 +11,24 @@ class Solution:
         center = right = 0
 
         for i in range(2, n - 2):
-            # 
-            mirror = 2 * center - i
             radius = 0
-
-            # If i is a part of the previous biggest palindrome
-            # you can estimate "palindrome radius" has at least mirrored center of palindrome
             if i < right:
+                distance = i - center
+                mirror = center - i
                 radius = min(right - i, pali_radiuses[mirror])
-
-
-            l = i - (radius + 1)
-            r = i + (radius + 1)
-            while t[l] == t[r]:
-                radius += 1
+            l = i - radius - 1
+            r = i + radius + 1
+            while l >= 0 and r < len(t) and t[l] == t[r]:
                 l -= 1
                 r += 1
-
+                radius += 1
             pali_radiuses[i] = radius
-
-            # Update center and right
-            if i + pali_radiuses[i] > right:
+            if r > right:
                 center = i
-                right = i + pali_radiuses[i]
-
-        # Find the maximum element in pali_radiuses
-        max_len = max(pali_radiuses)
-        center_index = pali_radiuses.index(max_len)
-
-        # Convert back to original string indices
-        start = (center_index - max_len) // 2
-        return s[start: start + max_len]
+                right = r
+        max_length = max(pali_radiuses)
+        index = pali_radiuses.index(max_length)
+        start = (index - max_length) // 2
+        return s[start:start + max_length]
+            
 
