@@ -5,11 +5,13 @@ class Solution:
             t = '^#' + '#'.join(s) + '#$'
             n = len(t)
             pali_radiuses = [0] * n
-            left, right = 0, 0
+            center, right = 0, 0
             for i in range(n):
                 radius = 0
                 if i < right:
-                    radius = min(right - i, pali_radiuses[left + (right - i)])
+                    distance = i - center
+                    mirror = center - distance
+                    radius = min(right - i, pali_radiuses[mirror])
                 l = i - radius - 1
                 r = i + radius + 1
                 while l >= 0 and r < n and t[l] == t[r]:
@@ -17,7 +19,7 @@ class Solution:
                     r += 1
                     radius += 1
                 if i + radius > right:
-                    left, right = i - radius, i + radius
+                    center, right = i, i + radius
                 pali_radiuses[i] = radius
             return pali_radiuses
         
