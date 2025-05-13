@@ -1,41 +1,46 @@
 class Solution:
+    # you want to start any char in t
+    # you want to continue all the way til the requirement is fulfilled
+    # once it reaches, you are going to pop it til the next char in t
     def minWindow(self, s: str, t: str) -> str:
-        # Looks like sliding window
-        # you always want to start and end with char in t. you don't need to expand further
-        # 1. you find the any char to start with (keep shifting to right til then)
-        # 2. keep going until you fulfill the condition => how do you know??
-        # 3. save the string
-        # 4. eliminate suffix and try from 
-        # you want to maintain hashmap to count the char (t & s)
-        # you also want to maintain match length
-        # increment match length when new char count matches t
-        # decrement match length when char count less than t
-        # stop match length is equal to t1 map key length
-
-        s_map = defaultdict(int)
-        t_map = defaultdict(int)
-        match_length = 0
-        min_substring = ""
-        for c in t:
-            t_map[c] += 1
-        t_map_length = len(t_map)
+        answer = None
         i = 0
         j = 0
-        while i <= j and j < len(s):
-            c = s[j]
-            s_map[c] += 1
-            if s_map[c] == t_map[c]:
-                match_length += 1
-            while match_length == t_map_length:
-                if len(s[i:j+1]) < len(min_substring) or min_substring == "":
-                    min_substring = s[i:j+1]
-                start = i
-                while (start == i) or (i < len(s) and s[i] not in t):
-                    removing_c = s[i]
-                    if s_map[removing_c] == t_map[removing_c]:
-                        match_length -= 1
-                    s_map[removing_c] -= 1
+        count_map = self.init_count_map(t)
+        done = 0
+        t_count = len(count_map)
+        move_forward = True
+        while j < len(s):
+            if t_count == done:
+                #print(len(answer) if answer is not None else "None", j - i + 1)
+                if answer is None:
+                    answer = s[i:j+1]
+                elif len(answer) > (j - i + 1):
+                    answer = s[i:j+1]
+                removing_c = s[i]
+                i += 1
+                if removing_c in count_map:
+                    count_map[removing_c] += 1
+                    if count_map[removing_c] == 1:
+                        done -= 1
+                        j += 1
+                while i < j and s[i] not in count_map:
                     i += 1
-            j += 1
-        return min_substring
+            else:
+                c = s[j]
+                if c in count_map:
+                    count_map[c] -= 1
+                    if count_map[c] == 0:
+                        done += 1
+                if t_count != done:
+                    j += 1
+        return answer if answer is not None else ""
+
+
+
+    def init_count_map(self, t):
+        count_map = {}
+        for c in t:
+            count_map[c] = count_map.get(c, 0) + 1
+        return count_map
         
