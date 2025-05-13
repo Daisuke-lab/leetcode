@@ -7,11 +7,10 @@ class Solution:
             if haystack[i] == needle[j]:
                 i += 1
                 j += 1
+            elif j == 0:
+                i += 1
             else:
-                if j == 0:
-                    i += 1
-                else:
-                    j = lps[j-1]
+                j = lps[j-1]
 
             if j == len(needle):
                 return i - j
