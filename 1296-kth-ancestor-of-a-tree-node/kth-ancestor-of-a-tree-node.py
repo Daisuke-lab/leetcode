@@ -1,8 +1,8 @@
 class TreeAncestor:
 
     def __init__(self, n: int, parent: List[int]):
-        self.lift_height = int(math.log(n, 2)) + 1
-        #print(self.lift_height)
+        self.lift_height = ceil(math.log(n, 2)) + 1
+        # anceestor[node][exponent] = 2^exponent parent
         self.ancestors = [[
             -1 for j in range(self.lift_height)]
             for i in range(n)]
@@ -17,6 +17,8 @@ class TreeAncestor:
             for node in range(1, n):
                 prev = self.ancestors[node][jump - 1]
                 if prev != -1:
+                    # 2^jump-1 parent of 2^jump-1 parent is 2^jump parent
+                    #(2^(x-1)) + (2^(x-1)) = (2^(x))
                     self.ancestors[node][jump] = self.ancestors[prev][jump - 1]
         #print(self.ancestors)
 
