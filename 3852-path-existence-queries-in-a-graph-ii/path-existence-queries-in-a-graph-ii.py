@@ -1,4 +1,4 @@
-inf = float('inf')
+
 class Solution:
     # If you know it's not in the same component, it immediately can return -1
     # 
@@ -11,7 +11,7 @@ class Solution:
             src = self.get_curr_index(src)
             dest = self.get_curr_index(dest)
             curr = self.query(min(src, dest), max(src, dest))
-            distances.append(curr if curr < inf else -1)
+            distances.append(curr if curr < float("inf") else -1)
         return distances
 
 
@@ -25,7 +25,7 @@ class Solution:
             return 1
         # if farthest from src is smaller than dest
         if self.ancestors[src][jump] < dest:
-            return inf
+            return float("inf")
         # find spot just before it exceeds dest
         for next_jump in range(jump, -1, -1):
             if self.ancestors[src][next_jump] < dest:
@@ -37,7 +37,6 @@ class Solution:
     
     def build_binary_lifting(self, n, nums, maxDiff):
         self.lift_height = ceil(math.log(n, 2)) + 1
-        #self.lift_height = len(bin(n)[2:]) + 1
         ancestors = [[
             -1 for j in range(self.lift_height)]
             for i in range(n)]
