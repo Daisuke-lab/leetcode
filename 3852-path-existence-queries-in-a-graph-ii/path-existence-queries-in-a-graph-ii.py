@@ -1,4 +1,3 @@
-
 class Solution:
     # If you know it's not in the same component, it immediately can return -1
     # 
@@ -15,7 +14,7 @@ class Solution:
         return distances
 
 
-            
+    @cache   
     def query(self, src, dest, jump=None):
         jump = jump if jump is not None else self.lift_height - 1
         if src == dest:
