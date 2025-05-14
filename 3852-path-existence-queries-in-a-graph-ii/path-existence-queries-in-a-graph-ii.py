@@ -36,8 +36,8 @@ class Solution:
 
     
     def build_binary_lifting(self, n, nums, maxDiff):
-        #self.lift_height = int(math.log(n, 2)) + 1
-        self.lift_height = len(bin(n)[2:]) + 1
+        self.lift_height = ceil(math.log(n, 2)) + 1
+        #self.lift_height = len(bin(n)[2:]) + 1
         ancestors = [[
             -1 for j in range(self.lift_height)]
             for i in range(n)]
