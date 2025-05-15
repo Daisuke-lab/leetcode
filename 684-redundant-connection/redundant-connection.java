@@ -12,7 +12,7 @@ class Solution {
         List<Integer> path = new ArrayList<>();
         Set<Integer> cycle = new HashSet<>();
         int cycleStartingV = dfs(path, cycle, 1, -1);
-        System.out.println(path);
+        //System.out.println(path);
         for (int i=path.size() - 1; i >= 0; i--) {
             int v = path.get(i);
             if (v == cycleStartingV) {
