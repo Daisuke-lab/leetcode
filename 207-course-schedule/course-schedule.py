@@ -3,16 +3,32 @@ class Solution:
         self.out_list = self.init_out_list(numCourses, prerequisites)
         self.in_list = self.init_in_list(numCourses, prerequisites)
         queue = self.collect_zero_incoming_vertices(self.in_list)
-        topological_sort = []
+        self.topological_sort = []
+        self.visited = set()
         while queue:
             node = queue.popleft()
-            topological_sort.append(node)
-            for ad in self.out_list[node]:
-                self.in_list[ad].remove(node)
-                if len(self.in_list[ad]) == 0:
-                    queue.append(ad)
+            if node in self.visited:
+                continue
+            if self.dfs(node, set()) is False:
+                return False
+        #print(self.topological_sort)
+        return len(self.topological_sort) == numCourses
 
-        return len(topological_sort) == numCourses
+    def dfs(self, node, path):
+        if node in path:
+            return False
+        if node in self.visited:
+            return True
+        path.add(node)
+        for ad in self.out_list[node]:
+            if self.dfs(ad, path) is False:
+                return False
+        path.remove(node)
+        self.topological_sort.append(node)
+        self.visited.add(node)
+        return True
+        
+
 
     def init_out_list(self, n, edges):
         out_list = {i: set() for i in range(n)}
