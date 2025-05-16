@@ -1,11 +1,19 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        self.ad_list = self.init_ad_list(prerequisites)
-        for node in self.ad_list:
-            found = self.find_cycle(node, set())
-            if found:
-                return False
-        return True
+        self.out_list = self.init_out_list(numCourses, prerequisites)
+        self.in_list = self.init_in_list(numCourses, prerequisites)
+        queue = self.collect_zero_incoming_vertices(self.in_list)
+        topological_sort = []
+        while queue:
+            node = queue.popleft()
+            topological_sort.append(node)
+            for ad in self.out_list[node]:
+                self.in_list[ad].remove(node)
+                if len(self.in_list[ad]) == 0:
+                    queue.append(ad)
+
+        return len(topological_sort) == numCourses
+        
 
     def find_cycle(self, node, visited):
         if node in visited:
@@ -18,12 +26,23 @@ class Solution:
         visited.remove(node)
         return False
 
-    def init_ad_list(self, edges):
-        ad_list = {}
+    def init_out_list(self, n, edges):
+        out_list = {i: set() for i in range(n)}
         for node1, node2 in edges:
-            node1_ads = ad_list.get(node1, [])
-            node1_ads.append(node2)
-            ad_list[node1] = node1_ads
-            ad_list[node2] = ad_list.get(node2, [])
-        return ad_list
+            out_list[node1].add(node2)
+        return out_list
+
+    def init_in_list(self, n, edges):
+        in_list = {i: set() for i in range(n)}
+        for node1, node2 in edges:
+            in_list[node2].add(node1)
+        return in_list
+
+    def collect_zero_incoming_vertices(self, in_list):
+        queue = collections.deque()
+        for node in in_list.keys():
+            if len(in_list[node]) == 0:
+                queue.append(node)
+
+        return queue
         
