@@ -13,18 +13,6 @@ class Solution:
                     queue.append(ad)
 
         return len(topological_sort) == numCourses
-        
-
-    def find_cycle(self, node, visited):
-        if node in visited:
-            return True
-        visited.add(node)
-        for ad in self.ad_list[node]:
-            if self.find_cycle(ad, visited):
-                return True
-        self.ad_list[node] = []
-        visited.remove(node)
-        return False
 
     def init_out_list(self, n, edges):
         out_list = {i: set() for i in range(n)}
