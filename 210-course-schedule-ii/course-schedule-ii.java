@@ -28,15 +28,16 @@ class Solution {
         if (path.contains(curr)) {
             return true;
         }
+        if (visited.contains(curr)) {
+            return false;
+        }
         path.add(curr);
         for (int ad: outList.get(curr)) {
             if (findCycle(ad, path)) {
                 return true;
             }
         }
-        if (!visited.contains(curr)) {
-            answer.add(curr);
-        }
+        answer.add(curr);
         path.remove(curr);
         visited.add(curr);
         return false;
