@@ -37,7 +37,8 @@ class Solution:
 
         find_centroids(node_a, -1)
         L = len(centroids)
-        if diameter % 2 == 0:
+        print(centroids)
+        if len(centroids) % 2 == 1:
             return [centroids[L // 2]]
         else:
             return [centroids[L // 2 - 1], centroids[L // 2]]
