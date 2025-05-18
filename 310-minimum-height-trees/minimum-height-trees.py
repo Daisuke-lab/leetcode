@@ -3,8 +3,8 @@ class Solution:
         if n == 1:
             return [0]
         self.ad_list = self.init_ad_list(n, edges)
-        edge_node,_ = self.get_farest_node(0, None)
-        edge_node2,_ = self.get_farest_node(edge_node, None)
+        edge_node,_ = self.get_farest_node(0)
+        edge_node2,_ = self.get_farest_node(edge_node)
         #print(edge_node, edge_node2)
         path = self.collect_path(edge_node, edge_node2)
         #print(path)
@@ -23,7 +23,7 @@ class Solution:
             ad_list[v2].add(v1)
         return ad_list
         
-    def get_farest_node(self, node, parent):
+    def get_farest_node(self, node, parent=None):
         farthest_node = node
         max_distance = 0
         for ad in self.ad_list[node]:
