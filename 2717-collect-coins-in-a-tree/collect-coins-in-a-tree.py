@@ -46,20 +46,20 @@ class Solution:
             if parent == ad:
                 continue
             time = self.collect_coins(ad, node) + 1
-            # if node == 9:
-            #     print("DEBUG:", ad, time)
             # when the coin not found
             if time >= float("inf"):
                 continue
+            if curr_time == float("inf"):
+                curr_time = time
             # when you need to add multiple positive numbers
-            if time > 0 and curr_time > 0:
-                curr_time = curr_time + time if curr_time != float("inf") else time
+            elif time > 0 and curr_time > 0:
+                curr_time = curr_time + time
             # when you see the positive number for the first time
             elif time > 0 and curr_time <= 0:
-                curr_time = time 
-            # when you only have negative numbers
-            elif time <= 0 and (curr_time <= 0 or curr_time == float("inf")):
-                curr_time = max(curr_time, time) if curr_time != float("inf") else time
+                curr_time = time
+            # when you have only negative numbers
+            elif time <= 0 and curr_time <= 0:
+                curr_time = max(curr_time, time)
                 
         # when you don't find any coin
         if curr_time == float("inf") and self.coins[node] == 1:
