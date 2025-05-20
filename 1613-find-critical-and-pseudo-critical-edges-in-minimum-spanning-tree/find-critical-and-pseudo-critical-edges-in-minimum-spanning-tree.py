@@ -26,19 +26,19 @@ class Solution:
         original_edges = edges
         self.index_map, edges = self.sort_edges(edges)
         mst_edges, min_cost = self.kruscal(n, edges)
-        criticals = set()
-        pseudo_criticals = set()
+        criticals = []
+        pseudo_criticals = []
         for i, edge in enumerate(edges):
+            is_critical = False
             potential_mst_edges, cost = self.kruscal(n, edges, edge, False)
             if cost != min_cost:
-                criticals.add(self.index_map[i])
+                criticals.append(self.index_map[i])
+                is_critical = True
             potential_mst_edges, cost = self.kruscal(n, edges, edge, True)
-            if cost == min_cost:
-                pseudo_criticals.add(self.index_map[i])
+            if cost == min_cost and not is_critical:
+                pseudo_criticals.append(self.index_map[i])
 
-
-        pseudo_criticals = pseudo_criticals - criticals
-        return [list(criticals), list(pseudo_criticals)]
+        return [criticals, pseudo_criticals]
 
     def kruscal(self, n, edges, special_edge=None, include=False):
         union_find = UnionFind(n)
