@@ -2,7 +2,7 @@ class UnionFind:
     def __init__(self, n):
         self.parents = [i for i in range(n)]
         self.distances = [0 for i in range(n)]
-
+        self.components = n
 
     def find(self, node):
         while node != self.parents[node]:
@@ -21,6 +21,7 @@ class UnionFind:
         else:
             self.parents[v1_parent] = v2_parent
             self.distances[v2_parent] += self.distances[v1_parent] + distance
+        self.components -=1
         return True 
 
 class Solution:
@@ -31,8 +32,9 @@ class Solution:
         edges = sorted(self.collect_edges(n), key=lambda edge: edge[2])
         for v1, v2, distance in edges:
             union_find.union(v1, v2, distance)
+            if union_find.components == 1:
+                return union_find.distances[union_find.find(0)]
         return union_find.distances[union_find.find(0)]
-        
 
     def collect_edges(self, n):
         edges = []
