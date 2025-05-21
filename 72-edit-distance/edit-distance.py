@@ -12,9 +12,7 @@ class Solution:
         memo[0][0] = 0
         for i in range(len(word1)+1):
             for j in range(len(word2)+1):
-                if i == 0 and j == 0:
-                    memo[i][j] = 0
-                elif i == 0:
+                if i == 0:
                     memo[i][j] = j
                 elif j == 0:
                     memo[i][j] = i
