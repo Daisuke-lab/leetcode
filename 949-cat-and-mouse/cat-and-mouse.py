@@ -72,4 +72,4 @@ class Solution:
                             color[prev_mouse][prev_cat][prev_state] = 2
                             queue.append((prev_mouse, prev_cat, prev_state))
         
-        return color[1][2][0]
+        return 0
