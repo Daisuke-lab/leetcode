@@ -45,7 +45,8 @@ class Solution:
                     # if already visited, continue
                     if color[mouse][next_cat][mouse_turn] != 0:
                         continue
-                    # if you have at least one option in neighbors to win (=2), current node is also 2.
+                    # if current result is 2, anf after mouse finished moving and position itself at "mouse"
+                    # cat can reach out from next_cat to current "cat" position
                     if result == 2:
                         color[mouse][next_cat][mouse_turn] = 2
                         queue.append((mouse, next_cat, mouse_turn))
@@ -59,10 +60,8 @@ class Solution:
             elif is_mouse_turn:  
                 for next_mouse in ad_list[mouse]:
                     cat_turn = 0
-                    # if already visited, continue
                     if color[next_mouse][cat][cat_turn] != 0:
                         continue
-
                     if result == 1:
                         color[next_mouse][cat][cat_turn] = 1
                         queue.append((next_mouse, cat, cat_turn))
