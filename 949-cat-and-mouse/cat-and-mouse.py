@@ -1,54 +1,66 @@
+from collections import deque
+
 class Solution:
     def catMouseGame(self, graph: List[List[int]]) -> int:
-        N = max( map(max,graph) )
-
-		# outDegree of state nodes in game graph.
-        gameOutDegree = defaultdict(int)
-        for a in range(N+1):
-            for b in range(N+1):
-                gameOutDegree[(a,b,1)] = len(graph[a])
-                gameOutDegree[(a,b,2)] = len(graph[b]) - (1 if 0 in graph[b] else 0)
+        n = len(graph)
+        # The state is (m, c, turn), where turn 0 is mouse's turn, 1 is cat's turn
+        # We will use BFS starting from known terminal states
+        # The color (result) of each state: 0 (draw), 1 (mouse wins), 2 (cat wins)
+        color = [[[0] * 2 for _ in range(n)] for __ in range(n)]
+        # The degree is the number of possible moves from this state for mouse or cat
+        degree = [[[0] * 2 for _ in range(n)] for __ in range(n)]
         
-        options = defaultdict(set) # will store possible outcomes for each state: one of {1}, {2}, or {1,2}
+        for m in range(n):
+            for c in range(n):
+                degree[m][c][0] = len(graph[m])  # mouse's turn, can move to any adjacent node
+                degree[m][c][1] = len(graph[c]) - (0 in graph[c])  # cat's turn, can't move to 0
         
-        invGraph = [[] for _ in range(N+1)]
-        for a in range(N+1):
-            for na in graph[a]: invGraph[na].append(a)
-
-        res = defaultdict(int)
-        leaves = deque()
-        for b in range(1,N+1): 
-            res[(0,b,2)] = 1
-            leaves.append((0,b,2))
-        for i in range(1,N+1): 
-            res[(i,i,1)] = 2
-            leaves.append((i,i,1))
-            res[(i,i,2)] = 2
-            leaves.append((i,i,2))        
+        q = deque()
+        # Initialize terminal states
+        for i in range(n):
+            for t in range(2):
+                # Mouse wins if it's at 0
+                color[0][i][t] = 1
+                q.append((0, i, t, 1))
+                # Cat wins if cat and mouse are at the same position (not 0)
+                if i != 0:
+                    color[i][i][t] = 2
+                    q.append((i, i, t, 2))
         
-        while leaves:
-            a,b,t = leaves.popleft()
-            r = res[(a,b,t)]
-		    
-		    #if mouse moves now, then in preceeding state cat moved.
-            if t==1: 
-                for prevb in invGraph[b]:
-                    prevState = (a,prevb,2)
-                    if prevb == 0 or prevState in res: continue
-                    options[prevState].add(r) #prevState may lead to outcome r
-                    gameOutDegree[prevState] -= 1
-                    # we can process prevState if r==2 (cat already can win prevState by following prevState -> (a,b,t))
-                    # or if we already processed all possible branches from prevState
-                    if gameOutDegree[prevState] == 0 or r==2:
-                        res[(prevState)] = max(options[prevState])
-                        leaves.append( prevState )            
-            if t==2:
-                for preva in invGraph[a]:
-                    prevState = (preva,b,1)
-                    if prevState in res: continue
-                    options[prevState].add(r)
-                    gameOutDegree[prevState] -= 1
-                    if gameOutDegree[prevState] == 0 or r==1: 
-                        res[(prevState)] = min(options[prevState])
-                        leaves.append(prevState)
-        return res[(1,2,1)]
+        while q:
+            m, c, t, res = q.popleft()
+            if (m, c, t) == (1, 2, 0):
+                return res
+            # Get all parent states that can lead to this state
+            if t == 0:  # current turn is mouse's, previous turn was cat's
+                for prev_c in graph[c]:
+                    if prev_c == 0:
+                        continue
+                    prev_m, prev_t = m, 1
+                    if color[prev_m][prev_c][prev_t] != 0:
+                        continue
+                    # Cat wants to maximize its chance to win, so if there's a move leading to cat's win (2), then cat will choose it
+                    if res == 2:
+                        color[prev_m][prev_c][prev_t] = 2
+                        q.append((prev_m, prev_c, prev_t, 2))
+                    else:
+                        degree[prev_m][prev_c][prev_t] -= 1
+                        if degree[prev_m][prev_c][prev_t] == 0:
+                            color[prev_m][prev_c][prev_t] = 1
+                            q.append((prev_m, prev_c, prev_t, 1))
+            else:  # current turn is cat's, previous turn was mouse's
+                for prev_m in graph[m]:
+                    prev_c, prev_t = c, 0
+                    if color[prev_m][prev_c][prev_t] != 0:
+                        continue
+                    # Mouse wants to maximize its chance to win (1), so if there's a move leading to mouse's win, it will choose it
+                    if res == 1:
+                        color[prev_m][prev_c][prev_t] = 1
+                        q.append((prev_m, prev_c, prev_t, 1))
+                    else:
+                        degree[prev_m][prev_c][prev_t] -= 1
+                        if degree[prev_m][prev_c][prev_t] == 0:
+                            color[prev_m][prev_c][prev_t] = 2
+                            q.append((prev_m, prev_c, prev_t, 2))
+        
+        return color[1][2][0]
