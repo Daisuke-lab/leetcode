@@ -38,38 +38,39 @@ class Solution:
                 return result
             # Get all parent states that can lead to this state
             if is_cat_turn:  # current turn is mouse's, previous turn was cat's
-                for prev_cat in ad_list[cat]:
-                    if prev_cat == 0:
+                for next_cat in ad_list[cat]:
+                    if next_cat == 0:
                         continue
-                    prev_mouse, prev_state = mouse, 1
+                    mouse_turn = 1
                     # if already visited, continue
-                    if color[prev_mouse][prev_cat][prev_state] != 0:
+                    if color[mouse][next_cat][mouse_turn] != 0:
                         continue
                     # if you have at least one option in neighbors to win (=2), current node is also 2.
                     if result == 2:
-                        color[prev_mouse][prev_cat][prev_state] = 2
-                        queue.append((prev_mouse, prev_cat, prev_state))
+                        color[mouse][next_cat][mouse_turn] = 2
+                        queue.append((mouse, next_cat, mouse_turn))
                     # if there is a selection that leads to mouse's win, you decrease the degree by 1
                     elif result == 1:
-                        degree[prev_mouse][prev_cat][prev_state] -= 1
+                        degree[mouse][next_cat][mouse_turn] -= 1
                         # once it's guaranteed there is no more option (no degree), you mark it as 1
-                        if degree[prev_mouse][prev_cat][prev_state] == 0:
-                            color[prev_mouse][prev_cat][prev_state] = 1
-                            queue.append((prev_mouse, prev_cat, prev_state))
+                        if degree[mouse][next_cat][mouse_turn] == 0:
+                            color[mouse][next_cat][mouse_turn] = 1
+                            queue.append((mouse, next_cat, mouse_turn))
             elif is_mouse_turn:  
-                for prev_mouse in ad_list[mouse]:
-                    prev_cat, prev_state = cat, 0
+                for next_mouse in ad_list[mouse]:
+                    cat_turn = 0
                     # if already visited, continue
-                    if color[prev_mouse][prev_cat][prev_state] != 0:
+                    if color[next_mouse][cat][cat_turn] != 0:
                         continue
 
                     if result == 1:
-                        color[prev_mouse][prev_cat][prev_state] = 1
-                        queue.append((prev_mouse, prev_cat, prev_state))
+                        color[next_mouse][cat][cat_turn] = 1
+                        queue.append((next_mouse, cat, cat_turn))
                     elif result == 2:
-                        degree[prev_mouse][prev_cat][prev_state] -= 1
-                        if degree[prev_mouse][prev_cat][prev_state] == 0:
-                            color[prev_mouse][prev_cat][prev_state] = 2
-                            queue.append((prev_mouse, prev_cat, prev_state))
+                        degree[next_mouse][cat][cat_turn] -= 1
+                        if degree[next_mouse][cat][cat_turn] == 0:
+                            color[next_mouse][cat][cat_turn] = 2
+                            queue.append((next_mouse, cat, cat_turn))
         
+        # if it is not appended to the queue (neither 1 nor 2), it's 0
         return 0
