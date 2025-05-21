@@ -22,47 +22,54 @@ class Solution:
             for state in range(2):
                 # Mouse wins if it's at 0
                 color[0][cat][state] = 1
-                queue.append((0, cat, state, 1))
+                queue.append((0, cat, state))
                 # Cat wins if cat and mouse are at the same position (not 0)
                 if cat != 0:
                     color[cat][cat][state] = 2
-                    queue.append((cat, cat, state, 2))
+                    queue.append((cat, cat, state))
         
         while queue:
-            mouse, cat, state, result = queue.popleft()
+            mouse, cat, state = queue.popleft()
+            result = color[mouse][cat][state]
+            is_cat_turn = state == 0
+            is_mouse_turn = not is_cat_turn
             # this is the answer
             if (mouse, cat, state) == (1, 2, 0):
                 return result
             # Get all parent states that can lead to this state
-            if state == 0:  # current turn is mouse's, previous turn was cat's
+            if is_cat_turn:  # current turn is mouse's, previous turn was cat's
                 for prev_cat in ad_list[cat]:
                     if prev_cat == 0:
                         continue
                     prev_mouse, prev_state = mouse, 1
+                    # if already visited, continue
                     if color[prev_mouse][prev_cat][prev_state] != 0:
                         continue
-                    # Cat wants to maximize its chance to win, so if there's a move leading to cat's win (2), then cat will choose it
+                    # if you have at least one option in neighbors to win (=2), current node is also 2.
                     if result == 2:
                         color[prev_mouse][prev_cat][prev_state] = 2
-                        queue.append((prev_mouse, prev_cat, prev_state, 2))
-                    else:
+                        queue.append((prev_mouse, prev_cat, prev_state))
+                    # if there is a selection that leads to mouse's win, you decrease the degree by 1
+                    elif result == 1:
                         degree[prev_mouse][prev_cat][prev_state] -= 1
+                        # once it's guaranteed there is no more option (no degree), you mark it as 1
                         if degree[prev_mouse][prev_cat][prev_state] == 0:
                             color[prev_mouse][prev_cat][prev_state] = 1
-                            queue.append((prev_mouse, prev_cat, prev_state, 1))
-            else:  # current turn is cat's, previous turn was mouse's
+                            queue.append((prev_mouse, prev_cat, prev_state))
+            elif is_mouse_turn:  
                 for prev_mouse in ad_list[mouse]:
                     prev_cat, prev_state = cat, 0
+                    # if already visited, continue
                     if color[prev_mouse][prev_cat][prev_state] != 0:
                         continue
-                    # Mouse wants to maximize its chance to win (1), so if there's a move leading to mouse's win, it will choose it
+
                     if result == 1:
                         color[prev_mouse][prev_cat][prev_state] = 1
-                        queue.append((prev_mouse, prev_cat, prev_state, 1))
-                    else:
+                        queue.append((prev_mouse, prev_cat, prev_state))
+                    elif result == 2:
                         degree[prev_mouse][prev_cat][prev_state] -= 1
                         if degree[prev_mouse][prev_cat][prev_state] == 0:
                             color[prev_mouse][prev_cat][prev_state] = 2
-                            queue.append((prev_mouse, prev_cat, prev_state, 2))
+                            queue.append((prev_mouse, prev_cat, prev_state))
         
         return color[1][2][0]
