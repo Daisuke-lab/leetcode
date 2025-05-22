@@ -1,50 +1,41 @@
-class Solution:
-    # undirected graph
-    # you want to create ad_list
-    # value_map[(edge)] = value
+class UnionFind:
+    def __init__(self):
+        self.parent = {}
+        self.weight = {}
     
-    #  how do you detect cycle ? => just have path with dfs
-    #  if you can not reach to the destination, it is also -1
-    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
-        self.ad_list = self.init_ad_list(equations)
-        self.value_map = self.init_value_map(equations, values)
-        answer = []
-        for src, dest in queries:
-            result = self.dfs(src, dest, set())
-            answer.append(result)
-        return answer
-
-    def dfs(self, src, dest, visited):
-        if src not in self.ad_list or dest not in self.ad_list:
-            return - 1.0
-        if src == dest:
-            return 1.0
-        elif src in visited:
-            return -1.0
-        visited.add(src)
-        for ad in self.ad_list[src]:
-            result = self.dfs(ad, dest, visited)
-            if result != - 1.0:
-                return result * self.value_map[(src, ad)]
-        return -1.0
-    def init_ad_list(self, edges):
-        ad_list = {}
-        for v1, v2 in edges:
-            v1_ads = ad_list.get(v1, set())
-            v2_ads = ad_list.get(v2, set())
-            v1_ads.add(v2)
-            v2_ads.add(v1)
-            ad_list[v1] = v1_ads
-            ad_list[v2] = v2_ads
-        return ad_list
-
-    def init_value_map(self, edges, values):
-        value_map = {}
-        for i, edge in enumerate(edges):
-            v1, v2 = edge
-            edge = (v1, v2)
-            reverse_edge = (v2, v1)
-            value_map[edge] = values[i]
-            value_map[reverse_edge] = 1/values[i]
-        return value_map
+    def add(self, x):
+        if x not in self.parent:
+            self.parent[x] = x
+            self.weight[x] = 1.0
+    
+    def find(self, x):
+        if x != self.parent[x]:
+            orig_parent = self.parent[x]
+            self.parent[x] = self.find(self.parent[x])
+            self.weight[x] *= self.weight[orig_parent]
+        return self.parent[x]
+    
+    def union(self, x, y, value):
+        self.add(x)
+        self.add(y)
+        root_x = self.find(x)
+        root_y = self.find(y)
         
+        if root_x != root_y:
+            self.parent[root_x] = root_y
+            self.weight[root_x] = value * self.weight[y] / self.weight[x]
+    
+    def get_ratio(self, x, y):
+        if x not in self.parent or y not in self.parent or self.find(x) != self.find(y):
+            return -1.0
+        return self.weight[x] / self.weight[y]
+
+class Solution:
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+        uf = UnionFind()
+        
+        for (a, b), value in zip(equations, values):
+            uf.union(a, b, value)
+        print(uf.weight)
+        
+        return [uf.get_ratio(a, b) for a, b in queries]
