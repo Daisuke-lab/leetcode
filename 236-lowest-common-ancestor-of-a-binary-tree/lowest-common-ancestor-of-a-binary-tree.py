@@ -19,42 +19,25 @@ class Solution:
             return False, False, None
         if root == p and root == q:
             return True, True, root
-        elif root == p:
-            p_left_found, q_left_found, left_node = self.dfs(root.left, p, q) 
-            p_right_found, q_right_found, right_node = self.dfs(root.right, p, q)
+        p_left_found, q_left_found, left_node = self.dfs(root.left, p, q) 
+        p_right_found, q_right_found, right_node = self.dfs(root.right, p, q)
+        if root == p:
             p_found = True
             q_found = q_left_found or q_right_found
-            if p_found and q_found:
-                if left_node is not None:
-                    node = left_node
-                elif right_node is not None:
-                    node = right_node
-                else:
-                    node = root
         elif root == q:
-            p_left_found, q_left_found, left_node = self.dfs(root.left, p, q) 
-            p_right_found, q_right_found, right_node = self.dfs(root.right, p, q)
             p_found = p_left_found or p_right_found
             q_found = True
-            if p_found and q_found:
-                if left_node is not None:
-                    node = left_node
-                elif right_node is not None:
-                    node = right_node
-                else:
-                    node = root
         else:
-            p_left_found, q_left_found, left_node = self.dfs(root.left, p, q) 
-            p_right_found, q_right_found, right_node = self.dfs(root.right, p, q)
             p_found = p_left_found or p_right_found
             q_found = q_left_found or q_right_found
-            if p_found and q_found:
-                if left_node is not None:
-                    node = left_node
-                elif right_node is not None:
-                    node = right_node
-                else:
-                    node = root
+
+        if p_found and q_found:
+            if left_node is not None:
+                node = left_node
+            elif right_node is not None:
+                node = right_node
+            else:
+                node = root
         return p_found, q_found, node
 
             
