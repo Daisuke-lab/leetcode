@@ -29,13 +29,13 @@ class TreeAncestor:
         # k = 2^n + 2^m + 2^s + .....
         # e.g. k = 6 = 4 + 2 => 
         # 100
-        for i in range(self.max_exponent):
-            # if k = 2^i + p
-            if k & (1 << i): 
-                node = self.ancestors[node][i]
-                if node == -1:
-                    return -1  # No such ancestor
-        return node
+        # for i in range(self.max_exponent):
+        #     # if k = 2^i + p
+        #     if k & (1 << i): 
+        #         node = self.ancestors[node][i]
+        #         if node == -1:
+        #             return -1  # No such ancestor
+        # return node
 
         binary = bin(k)[2:]
         curr = node
@@ -43,6 +43,8 @@ class TreeAncestor:
             if bit == "1":
                 exponent = len(binary) - i -1
                 curr = self.ancestors[curr][exponent]
+                if curr == -1:
+                    return -1
         return curr
 
 # Your TreeAncestor object will be instantiated and called as such:
