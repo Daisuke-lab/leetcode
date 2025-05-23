@@ -27,16 +27,7 @@ class TreeAncestor:
     def getKthAncestor(self, node: int, k: int) -> int:
         # collect exponents
         # k = 2^n + 2^m + 2^s + .....
-        # e.g. k = 6 = 4 + 2 => 
-        # 100
-        # for i in range(self.max_exponent):
-        #     # if k = 2^i + p
-        #     if k & (1 << i): 
-        #         node = self.ancestors[node][i]
-        #         if node == -1:
-        #             return -1  # No such ancestor
-        # return node
-
+        # e.g. k = 6 = 4 + 2 => 2^2 + 2^1 => takes 2 jumps and 1 jump from there
         binary = bin(k)[2:]
         curr = node
         for i, bit in enumerate(binary):
