@@ -1,27 +1,27 @@
 class Solution:
-    # get sum first.
-    # if it's odd return false
-    
-    # Brute Force
-    # you have two choices at every element. You choose the element or not
-    # Time complexity is O(2^n)
-    
-    # Is sort helpful ??
-    # this is actually combination sum question
-    # reduce target by selecting num, and also remove selected num 
-    def canPartition(self, nums: List[int]) -> bool:
-        num_sum = sum(nums)
-        if num_sum % 2:
-            return False
-        target = num_sum // 2
-        sum_set = set([0])
-        for num in nums:
-            temp = set(sum_set)
-            for _sum in temp:
-                sum_set.add(_sum + num)
-                if target in sum_set:
-                    return True
-        return False
-        
+    # every partition
 
+    # you want to create the half of sum
+    # knapscak
+    def canPartition(self, nums: List[int]) -> bool:
+        total_sum = sum(nums)
+        if total_sum % 2 == 1:
+            return False
+        target = total_sum // 2
+        self.memo = {}
+        self.nums = nums
+        return self.dp(0, target)
         
+    def dp(self, i, target):
+        #print(i, target)
+        if target == 0:
+            return True
+        elif target < 0:
+            return False
+        elif i == len(self.nums):
+            return False
+        elif (i, target) in self.memo:
+            return self.memo[(i, target)]
+        result = self.dp(i+1, target) or self.dp(i+1, target - self.nums[i])
+        self.memo[(i, target)] = result
+        return result
