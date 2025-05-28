@@ -8,14 +8,24 @@ class Solution:
     def lastStoneWeightII(self, stones: List[int]) -> int:
         self.memo = {}
         self.stones = stones
-        return self.dp(0, 0)
-    def dp(self, i, total):
-        if i == len(self.stones):
-            return total
-        elif (i, total) in self.memo:
-            return self.memo[(i, total)]
-        smallest_weight = float("inf")
-        smallest_weight = min(smallest_weight, self.dp(i+1, total + self.stones[i]))
-        smallest_weight = min(smallest_weight, self.dp(i+1, abs(total - self.stones[i])))
-        self.memo[(i, total)] = smallest_weight
-        return smallest_weight
+        total_sum = sum(stones)
+        target = total_sum // 2
+        remaining = self.dp(0, target)
+        if remaining == 0 and total_sum % 2 == 0:
+            return 0
+        else:
+            left = target - remaining
+            right = total_sum - left
+            return abs(left - right)
+    def dp(self, i, target):
+        if target == 0:
+            return 0
+        elif target < 0:
+            return float("inf")
+        elif i == len(self.stones):
+            return target
+        elif (i, target) in self.memo:
+            return self.memo[(i, target)]
+        result = min(self.dp(i+1, target), self.dp(i+1, target-self.stones[i]))
+        self.memo[(i, target)] = result
+        return result
