@@ -44,7 +44,9 @@ class Solution:
             buy_buy[half_price] = profit_with_discount
 
         for ad in self.ad_list[curr]:
+            # you calculate the max profit in all budgets when curr buy and doesn't buy
             curr_skip_dp, curr_buy_dp = self.dfs(ad)
+            # 
             skip_skip = self.merge(skip_skip, curr_skip_dp)
             skip_buy = self.merge(skip_buy, curr_buy_dp)
             buy_skip = self.merge(buy_skip, curr_skip_dp)
@@ -61,12 +63,13 @@ class Solution:
         profits = [INF] * total_budget
         for budget in range(total_budget):
             curr_profit = profits1[budget]
-            if curr_profit <= INF//2:
+            # 
+            if curr_profit == INF:
                 continue
             remaining_budget = total_budget - budget
             for upcoming_budget in range(remaining_budget):
                 upcoming_profit = profits2[upcoming_budget]
-                if upcoming_profit <= INF //2:
+                if upcoming_profit == INF:
                     continue
                 profits[budget +upcoming_budget] = max(profits[budget +upcoming_budget], curr_profit +upcoming_profit)
         return profits
