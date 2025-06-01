@@ -1,6 +1,10 @@
 class Solution:
-    # 101
-    # 
+    # Brute Force
+    # n*logn
+
+    # Digit DP 
+    # 8 = 1000
+    #  110 11 
     def findIntegers(self, n: int) -> int:
         self.memo = [[[
                 -1 for k in range(3)]
