@@ -1,13 +1,7 @@
 class Solution:
-    # you don't know how to sort it
-    # you don't know how not to violate the proportional distribution of money
-    
-    # => You want to fix the rate by sorting (there is one person who will get the minimum wage)
-    # => you want to collect min_heap such that all other workers can get more than min wage
-    # ==> you have lower efficiency but you want to maximizize the efficiency in this requirements
-    
-    # you can not sort by rate for sure
-    # 
+    # 1. To meet the first requirement, you sort it by rate so that previous worker get more money than their expectation
+    # 2. To minimize the total wage, you want to keep low quality people because you do rate * quality
+    #   => To do so, you use max heap
     def mincostToHireWorkers(self, quality: List[int], wage: List[int], k: int) -> float:
         min_money = float("inf")
         max_heap = []
