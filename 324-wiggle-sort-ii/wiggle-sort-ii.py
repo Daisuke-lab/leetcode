@@ -4,31 +4,41 @@ class Solution:
             return nums
         self.n = len(nums)
         self.quick_select(nums, 0, len(nums) - 1)
-        #print(nums)
-        # if you simply swap it, at max, you have 2 mistakes
-        # take it one and concat to the bottom
         self.wiggle(nums)
-        #self.adjust(nums)
         """
         Do not return anything, modify nums in-place instead.
         """
+    # 
     def index(self, i):
             return (1 + 2 * i) % (self.n | 1)
     def wiggle(self, nums):
-        i = j = 0
-        k = self.n - 1
-        mid = nums[self.n // 2]
+        i = k = 0
+        j = self.n - 1
+        median = nums[self.n // 2]
+
         #print(mid)
-        while j <= k:
-            if nums[self.index(j)] > mid:
-                nums[self.index(i)], nums[self.index(j)] = nums[self.index(j)], nums[self.index(i)]
+        while k <= j:
+            # if it is bigger than median, you insert from left side (odd index)
+            if nums[self.index(k)] > median:
+                nums[self.index(i)], nums[self.index(k)] = nums[self.index(k)], nums[self.index(i)]
                 i += 1
-                j += 1
-            elif nums[self.index(j)] < mid:
+                k += 1
+            # if it is smaller than median, you insert from right side (even index)
+            elif nums[self.index(k)] < median:
                 nums[self.index(j)], nums[self.index(k)] = nums[self.index(k)], nums[self.index(j)]
-                k -= 1
+                j -= 1
+            # if self.index(k) equal to median, it is not inserted to anywhere
+            # so the worse case, you have n/2 medians (e.g., [1,1,1,1,3,4,5])
+            # forget about 1, think of 3,4,5. It foes to odd index 100% 
+            # so it create [x,3,x,4,x,5,x]
+            # One thing you should notice that self.index(k) == self.index(k-1) == median doesn't mean
+            # you have consecutive median. It is actually index(k) = 1,3,5,0,2,4,6
+            # Again, it is eventually going to be swapped by other if statements.
+            # The bottom line is it's not going to be inserted into either left or right
+            # But when you find smaller/bigger value than median, it is collected as left or right and swap the median value
+            # to other half. 
             else:
-                j += 1
+                k += 1
 
                 
 
