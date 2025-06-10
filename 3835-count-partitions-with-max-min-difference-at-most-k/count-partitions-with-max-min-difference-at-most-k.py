@@ -1,21 +1,4 @@
 class Solution:
-    # Brute Force solution
-    # try every partition 
-    # O(2^n)
-
-    # DP
-    # i and j
-    # you want to return count
-    # you also want to return min number and max number
-    # O(n^2)
-
-    # args: i, j
-    # output: count, min_num, max_num
-
-    # base case: i = j => return 1, nums[i], nums[j]
-    # merge: find curr max and min and if it works, + 1
-    
-    # can you do bottom up
     def countPartitions(self, nums: List[int], k: int) -> int:
         memo = [-1 for i in range(len(nums))]
         memo[0] = 1
@@ -36,8 +19,13 @@ class Solution:
 
             while decrease_queue[0][1] - increase_queue[0][1] > k:
                 # you can not include partition that includes i
-                #acc = (acc - memo[i]) % mod
-                acc = (acc - (memo[i - 1] if i > 0 else 1)) % mod
+                # But you can keep the case when you add partition between j and j + 1
+                # memo[i-1] represent the number of partitions until i without partition between i and i + 1
+                # You want to keep the number with partition. That's why it's memo[i-1] not memo[i]
+                if i > 0:
+                    acc = (acc - memo[i-1]) % mod
+                else:
+                    acc = (acc -1) % mod
                 if decrease_queue[0][0] == i:
                     decrease_queue.popleft()
                 if increase_queue[0][0] == i:
@@ -46,7 +34,19 @@ class Solution:
             # you cache the max number of partitions from 0 to j
             memo[j] = acc
             # why multiply by 2??
-            # In the next iteration, [x,x,x] [y]
+            # for every partition so far, you can choose 2 options
+            # case1: add partition between j and j + 1
+            # case2: don't add parititon between j and j + 1
+
+            # ex
+            # current partition [4,1], [4][1]
+            # and now you have 3
+            # when you partition
+            # [4,1][3], [4][1][3]
+            # when you don't partition
+            # [4,1,3], [4][1,3]
+
+            # That's why you multiply by 2
             acc = (acc * 2) % mod
-        print(memo)
+        #print(memo)
         return memo[-1]            
