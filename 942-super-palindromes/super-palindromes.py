@@ -13,7 +13,6 @@ class Solution:
             if palindrome > right:
                 break
             count += 1
-            print(palindrome)
         return count
 
     def is_square(self, num):
@@ -58,8 +57,6 @@ class Solution:
                         yield num
                     else:
                         break
-        print("LENGTH:", start_length)
-        start = start_length // 2 if (start_length // 2) > 4 else 4
         for length in range(4, 10):
             half = length // 2
             if length % 2 ==0:
@@ -69,8 +66,6 @@ class Solution:
                     # print(len(str(num)))
                     if self.is_palindrome(num):
                         yield num
-                    # else:
-                    #     break
             else:
                 for i in range(10**(half-1), 10**half):
                     for j in range(10):
@@ -79,6 +74,4 @@ class Solution:
                         # print(len(str(num)))
                         if self.is_palindrome(num):
                             yield num
-                        else:
-                            break
                 
