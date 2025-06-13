@@ -74,4 +74,6 @@ class Solution:
                         # print(len(str(num)))
                         if self.is_palindrome(num):
                             yield num
+                        else:
+                            break
                 
