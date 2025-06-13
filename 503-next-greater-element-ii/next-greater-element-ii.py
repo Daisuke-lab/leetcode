@@ -1,17 +1,21 @@
 class Solution:
+    # find max
+    # not-increasing stack
+    # (i, num)
     def nextGreaterElements(self, nums: List[int]) -> List[int]:
-        answer = [-1 for i in range(len(nums))]
-        # monotonic decreasing stack
         stack = []
-        for i in range(len(nums)*2):
-            i = i % len(nums)
-            # when you see bigger num
-            while stack and nums[stack[-1]] < nums[i]:
-                j = stack.pop()
-                answer[j] = nums[i]
-            stack.append(i)
+        length = len(nums)
+        answer = [-1 for i in range(length)]
+        nums = nums + nums
+        max_num = max(nums)
+        for i, num in enumerate(nums):
+            while stack and stack[-1][1] < num:
+                j, prev_num = stack.pop()
+                answer[j] = num
+            if num != max_num:
+                i %= length
+                stack.append((i, num))
         return answer
-            
                 
                 
         
