@@ -1,24 +1,31 @@
 class Solution:
-    # you can not choose too far numbers
-    # tab = i[] i: max sum
-    # iterate i and check max (i-k ~ i) and find the max and plus current
-    # 
+    # Brute Force
+    # get max sum til i - k
+    # if it is negative, you don't include it 
+    # if it is positive, you include it
+    # but you can include i -1, i -2, i-3, ..i-k
+    # so this will be the deque
+
+    # non-increasing queue
+    # (i, num)
+    # you have choice 
+    # case1: want to include prefix to maintian neighborhood
+    # case2: remove the prefix 
+    # what do you want?? => I want the max sum of prefix
+    # To do that, you need deque
+    # get the max sum from previous block
+    # but index matters
     def constrainedSubsetSum(self, nums: List[int], k: int) -> int:
-        max_sum = nums[0]
-        # decreasing queue
         queue = collections.deque()
-        for i in range(len(nums)):
-            #print(queue)
-            if queue and i - queue[0][0] > k:
+        sums = [0 for i in range(len(nums))]
+        for i, num in enumerate(nums):
+            while queue and queue[0][0] < i - k:
                 queue.popleft()
-
-            curr_sum = nums[i]
             if queue and queue[0][1] > 0:
-                curr_sum += queue[0][1]
-            while queue and queue[-1][1] < curr_sum:
+                sums[i] = queue[0][1] + num
+            else:
+                sums[i] = num
+            while queue and queue[-1][1] < sums[i]:
                 queue.pop()
-            queue.append((i, curr_sum))
-            max_sum = max(max_sum, curr_sum)
-        return max_sum
-
-        
+            queue.append((i, sums[i]))
+        return max(sums)
