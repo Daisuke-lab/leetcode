@@ -3,7 +3,7 @@ class Solution:
     # then you keep high speed people
     def maxPerformance(self, n: int, speed: List[int], efficiency: List[int], k: int) -> int:
         engineers = sorted(list(zip(speed, efficiency)), reverse=True, key=lambda engineer: engineer[1])
-        print(engineers)
+        #print(engineers)
         min_heap = []
         max_performance = 0
         curr_sum = 0
