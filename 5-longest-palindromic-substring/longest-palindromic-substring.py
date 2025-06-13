@@ -1,35 +1,35 @@
 class Solution:
-
     def longestPalindrome(self, s: str) -> str:
-        # Make "s" to odd length "t"
-        # ABBA => #A#B#B#A# can be considerd as palindrome at # as center
-        # ^ and $ make sure it doesn't include # as a part of palindroe in algorithm.
-        t = "^#" + "#".join(s) + "#$"
-        n = len(t)
-        # max radius of palindrome starting from i
-        pali_radiuses = [0] * n
-        center = right = 0
-
-        for i in range(2, n - 2):
+        original_s = s
+        s = "^#" + "#".join(s) + "#$"
+        print(s)
+        radiuses = [0 for i in range(len(s))]
+        center = 0
+        right = 0
+        for i in range(len(s)):
             radius = 0
             if i < right:
-                distance = i - center
-                mirror = center - i
-                radius = min(right - i, pali_radiuses[mirror])
-            l = i - radius - 1
-            r = i + radius + 1
-            while l >= 0 and r < len(t) and t[l] == t[r]:
+                distance = right - center
+                mirror = center - distance
+                radius = min(radiuses[mirror], right -i)
+
+            l = i - (radius + 1)
+            r = i + (radius + 1)
+            while l >= 0 and r < len(s) and s[l] == s[r]:
                 l -= 1
                 r += 1
                 radius += 1
-            pali_radiuses[i] = radius
-            if r - 1 > right:
+            radiuses[i] = radius
+            if right < r -1:
                 center = i
-                right = r - 1
-        max_radius = max(pali_radiuses)
-        index = pali_radiuses.index(max_radius)
-        max_length = max_radius
-        start = (index - max_length) // 2
-        return s[start:start + max_length]
+                right = r -1
+        print(radiuses)
+        max_radius = max(radiuses)
+        max_len = (max_radius * 2) // 2
+        center_index = radiuses.index(max_radius)
+        # Convert back to original string indices
+        start = (center_index - max_len) // 2
+        return original_s[start: start + max_len]
+             
             
-
+        
