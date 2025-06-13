@@ -2,7 +2,6 @@ class Solution:
     def longestPalindrome(self, s: str) -> str:
         original_s = s
         s = "^#" + "#".join(s) + "#$"
-        print(s)
         radiuses = [0 for i in range(len(s))]
         center = 0
         right = 0
@@ -23,7 +22,6 @@ class Solution:
             if right < r -1:
                 center = i
                 right = r -1
-        print(radiuses)
         max_radius = max(radiuses)
         max_len = (max_radius * 2) // 2
         center_index = radiuses.index(max_radius)
