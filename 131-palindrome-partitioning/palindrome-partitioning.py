@@ -1,36 +1,31 @@
 class Solution:
-    # Brute Force => n^3 <= n^2 for iteration, n for checking if it's palindrome
-    # odd palindrome n^2
-    # even palindrome n^2
-    # in total , it's 2n^2
-    # But it's hard to separate
-    # it's the list of list, so top down
-    
-    # iterate s and cut s and solve sub problem O(n)
-    # for each cutted s, you check if it's palindrome O(n)
-    # you are going to add current palindrome to answer O(n)
-    # what do you want to memo?
-    # memo[i] = palindrome[]
-    # then it can not be top down
-    # 
+    # you have 2 choices
+    # include 
     def partition(self, s: str) -> List[List[str]]:
-        self.answers = []
+        self.answer = []
         self.s = s
         self.memo = {}
         self.recursion(0, [])
-        return self.answers
-        
+        return self.answer
+
+
     def recursion(self, i, curr):
         if i == len(self.s):
-            self.answers.append(curr.copy())
-            return
-
-        for j in range(i, len(self.s)+1):
-            if self.is_palindrome(self.s[i:j]):
-                curr.append(self.s[i:j])
-                self.recursion(j, curr)
-                curr.pop()
-
+            if curr and self.is_palindrome(curr[-1]):
+                self.answer.append(curr.copy())
+                return
+            else:
+                return 
+        if not curr or self.is_palindrome(curr[-1]):
+            curr.append(self.s[i])
+            self.recursion(i+1, curr)
+            del curr[-1]
+        if curr:
+            original = curr[-1]
+            original_index = len(curr) - 1
+            curr[-1] += self.s[i]
+            self.recursion(i+1, curr)
+            curr[original_index] = original 
 
 
     def is_palindrome(self, s):
