@@ -1,111 +1,120 @@
-class DoublyLinkedNode:
-    
+class DoublyLinkedList:
     def __init__(self, key=None, value=None):
         self.key = key
         self.value = value
         self.prev = None
         self.next = None
-        self.count = 1
+        self.freq = 1
 
-    def is_only_node_with_this_count(self):
-        return self.prev.count != self.count and self.next.count != self.count
-    def is_top_node(self):
-        return self.next.count != self.count
-        
+    def is_only_node_with_freq(self):
+        if self.next and self.next.freq == self.freq:
+            return False
+        if self.prev and self.prev.freq == self.freq:
+            return False
+        return True
+
+    def is_head_of_freq(self):
+        if self.next and self.next.freq == self.freq:
+            return False
+        return True
+
+
 class LFUCache:
+    # key_map is useful? => YES for get 
+    # freq_map: you keep the head of the frequency
+    
+    # delete the least frequent
+    # tail.next
+    
+    # delete any node
+    # if it is only node for the frequcny, delete frequency key
+    # if it is the head of the frequency, change the head
+    
+    # insert (update frequency)
+    # how to get the next frequency?? => check the past frequency head.next
+    # if it is bigger than new frequency, that should be your next
+    # if it is the same with new frequenct, that should be your prev
 
+    # insert (new node)
+    # if the freq 1 exists, just insert it as a head
+    # if the freq 1 doesn't exist, tail.next would be your next and tial is prev
     def __init__(self, capacity: int):
-        self.head = DoublyLinkedNode()
-        self.tail = DoublyLinkedNode()
+        self.head = DoublyLinkedList()
+        self.tail = DoublyLinkedList()
+        self.head.freq = float("inf")
+        self.tail.freq = - float("inf")
         self.head.prev = self.tail
         self.tail.next = self.head
-        self.tail.count = 0
-        self.head.count = float("inf")
-        self.key_map = {}
-        self.count_map = {}
         self.capacity = capacity
-    
-    def is_empty(self):
-        return self.head.prev == self.tail and self.tail.next == self.head
+        self.key_map = {}
+        self.freq_map = {}
 
-    def get_min_count(self):
-        if self.is_empty():
-            return float("inf")
-        else:
-            return self.tail.next.count
-    def get_max_count(self):
-        if self.is_empty():
-            return 0
-        else:
-            return self.head.prev.count
-
-
-    def remove(self, node):
-        key = node.key
-        tail = None
-        head = None
-        if node.is_only_node_with_this_count():
-            del self.count_map[node.count]
-            tail = node.prev
-            head = node.next
-        elif node.is_top_node():
-            self.count_map[node.count] = node.prev
-        del self.key_map[key]
+    def delete(self, node):
+        if node in [self.head, self.tail]:
+            return
+        if node.key not in self.key_map:
+            return 
+        if node.is_only_node_with_freq():
+            del self.freq_map[node.freq]
+        elif node.is_head_of_freq():
+            self.freq_map[node.freq] = node.prev
         node.prev.next = node.next
         node.next.prev = node.prev
+        del self.key_map[node.key]
 
-        if tail is None:
-            tail = self.count_map[node.count]
-            head = tail.next
-        return tail, head
-
-    def insert(self, node, tail=None, head=None):
-        self.key_map[node.key] = node
-        if node.count in self.count_map:
-            head = self.count_map[node.count].next
-            tail = self.count_map[node.count]
+    def insert(self, node):
+        if 1 in self.freq_map:
+            head = self.freq_map[1].next
+            tail = head.prev
         else:
-            if node.count < self.get_min_count():
-                tail = self.tail
-                head = self.tail.next
-            elif node.count > self.get_max_count():
-                tail = self.head.prev
-                head = self.head
-
-        node.next = head
+            head = self.tail.next
+            tail = self.tail
         node.prev = tail
-        head.prev = node
+        node.next = head
         tail.next = node
-        self.count_map[node.count] = node
+        head.prev = node
+        self.key_map[node.key] = node
+        self.freq_map[1] = node
+
+    def update(self, node):
+        if node.is_only_node_with_freq():
+            tail = node.prev
+            head = node.next
+        self.delete(node)
+        node.freq += 1
+        if node.freq in self.freq_map:
+            tail = self.freq_map[node.freq]
+            head = tail.next
+        elif node.freq - 1 in self.freq_map:
+            tail = self.freq_map[node.freq -1]
+            head = tail.next
+        node.prev = tail
+        node.next = head
+        tail.next = node
+        head.prev = node
+        self.freq_map[node.freq] = node
+        self.key_map[node.key] = node
+        
+
 
     def get(self, key: int) -> int:
-        #print("GET::", key)
-        result = -1
-        if key in self.key_map:
-            node = self.key_map[key]
-            tail, head = self.remove(node)
-            node.count += 1
-            self.insert(node, tail, head)
-            result = node.value
-        #self.print_list()
-        return result
+        if key not in self.key_map:
+            return -1
+        node = self.key_map[key]
+        self.update(node)
+        return node.value
 
     def put(self, key: int, value: int) -> None:
-        #print("PUT::", key, value)
         if key in self.key_map:
             node = self.key_map[key]
             node.value = value
-            tail, head = self.remove(node)
-            node.count += 1
-            self.insert(node, tail, head)
+            self.update(node)    
         else:
-            if len(self.key_map) == self.capacity:
-                self.remove(self.tail.next)
-            node = DoublyLinkedNode(key, value)
+            if self.capacity == len(self.key_map):
+                self.delete(self.tail.next)
+            node = DoublyLinkedList(key, value)
             self.insert(node)
-        #self.print_list()
-            
-            
+
 
 
 
