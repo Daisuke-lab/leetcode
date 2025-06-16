@@ -52,8 +52,8 @@ class LFUCache:
     def delete(self, node):
         if node in [self.head, self.tail]:
             return
-        if node.key not in self.key_map:
-            return 
+        # if node.key not in self.key_map:
+        #     return 
         if node.is_only_node_with_freq():
             del self.freq_map[node.freq]
         elif node.is_head_of_freq():
