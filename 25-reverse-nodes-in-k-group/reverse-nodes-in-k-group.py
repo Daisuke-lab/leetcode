@@ -4,52 +4,41 @@
 #         self.val = val
 #         self.next = next
 class Solution:
+    # you might need dummy node
+    # you need to maintian the node just before reversing
+    
+    # 
     def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
-        # two pointers are unrealistic because it's reverse
-        # you can just reverse with O(n) using prev
-        # you also want to maintain the next starting point
-        #
-        if k == 1:
-            return head
-        dummy = ListNode(0, 0)
-        slow = dummy
-        fast = ListNode(0, head)
-        starting_point = head
         count = 0
-        while fast:
-            while count != k and fast:
-                count += 1
-                fast = fast.next
-                if count == 1:
-                    starting_point = fast
-            if fast is None:
-                slow.next = starting_point
-                fast = None
-            else:
-                _next = fast.next
-                fast.next = None
-                reversed_node = self.reverse_list(starting_point)
-                slow.next = reversed_node
-                slow = starting_point
-                starting_point.next = _next
-                fast = starting_point
-            count = 0
-            starting_point = None
-
+        dummy = ListNode()
+        dummy.next = head
+        root = dummy
+        while head:
+            count += 1
+            if count == k and head:
+                _next = head.next
+                new_head, new_tail = self.reverse(root.next, head)
+                root.next = new_head
+                new_tail.next = _next
+                root = new_tail
+                head = new_tail
+                count = 0
+            head = head.next
         return dummy.next
-    def reverse_list(self, node):
-        prev = None
-        while node:
-            _next = node.next
-            node.next = None
-            if prev is None:
-                prev = node
+
+    def reverse(self, head, tail):
+        new_tail = head
+        new_head = None
+        while head != tail:
+            _next = head.next
+            head.next = None
+            if new_head == None:
+                new_head = head
             else:
-                node.next = prev
-                prev = node
-            node = _next
-        return prev
-                
-            
-        
+                head.next = new_head
+                new_head = head
+            head = _next
+        tail.next = new_head
+        new_head = tail
+        return new_head, new_tail
         
