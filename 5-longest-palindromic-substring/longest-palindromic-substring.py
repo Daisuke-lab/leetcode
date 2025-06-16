@@ -25,6 +25,3 @@ class Solution:
         start = (center_index - max_radius) // 2
         end = (center_index + max_radius) // 2
         return s[start:end]
-             
-            
-        
