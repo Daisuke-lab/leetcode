@@ -1,62 +1,48 @@
-class DoublyLinkedNode():
-    def __init__(self):
+class DoublyLinkedList:
+    def __init__(self,key=None, value=None):
+        self.key = key
+        self.value = value
         self.prev = None
         self.next = None
-        self.value = None
-        self.key = None
-
-    def build(self):
-        tail = self
-        head = DoublyLinkedNode()
-        tail.next = head
-        head.prev = tail
-        return tail, head
-
 class LRUCache:
 
     def __init__(self, capacity: int):
-        self.tail, self.head = DoublyLinkedNode().build()
-        self.node_map = {}
+        self.head = DoublyLinkedList()
+        self.tail = DoublyLinkedList()
+        self.head.prev = self.tail
+        self.tail.next = self.head 
         self.capacity = capacity
+        self.node_map = {}
 
-
-    def remove(self, node):
-        if node != self.tail or node != self.head:
-            node.prev.next = node.next
-            node.next.prev = node.prev
-            del self.node_map[node.key]
-
-
-    def remove_lru(self):
-        self.remove(self.tail.next)
+    def delete(self, node):
+        if node in [self.head, self.tail]:
+            return
+        del self.node_map[node.key]
+        node.prev.next = node.next
+        node.next.prev = node.prev
     
-    def add_recent(self, node):
+    def insert(self, node):
+        self.node_map[node.key] = node
         node.next = self.head
         node.prev = self.head.prev
+        self.head.prev.next = node
         self.head.prev = node
-        node.prev.next = node
-        self.node_map[node.key] = node
 
     def get(self, key: int) -> int:
-        if key in self.node_map:
-            node = self.node_map[key]
-            self.remove(node)
-            self.add_recent(node)
-            return node.value
-        else:
+        if key not in self.node_map:
             return -1
+        node = self.node_map[key]
+        self.delete(node)
+        self.insert(node)
+        return node.value
 
     def put(self, key: int, value: int) -> None:
-        if len(self.node_map) == self.capacity and key not in self.node_map:
-            self.remove_lru()
+        node = DoublyLinkedList(key, value)
         if key in self.node_map:
-            self.remove(self.node_map[key])
-        node = DoublyLinkedNode()
-        node.key = key
-        node.value = value
-        self.add_recent(node)
-        
-
+            self.delete(self.node_map[key])
+        if self.capacity == len(self.node_map):
+            self.delete(self.tail.next)
+        self.insert(node)
 
 
 # Your LRUCache object will be instantiated and called as such:
