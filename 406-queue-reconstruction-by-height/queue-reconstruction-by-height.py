@@ -1,7 +1,6 @@
 class LinkedNode():
     def __init__(self, i=None):
         self.i = i
-        self.prev = None
         self.next = None
 
 class Solution:
@@ -19,7 +18,6 @@ class Solution:
     def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
         head = LinkedNode()
         tail = LinkedNode()
-        head.prev = tail
         tail.next = head
         people.sort(key=lambda person: (-person[0], person[1]))
         #print(people)
@@ -31,10 +29,8 @@ class Solution:
                 curr = curr.next
                 k -= 1
             #print(i)
-            node.prev = curr
             node.next = curr.next
             curr.next = node
-            curr.next.prev = node
         answer = []
         curr = tail.next
         while curr != head:
