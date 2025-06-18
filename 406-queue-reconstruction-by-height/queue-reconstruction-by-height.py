@@ -18,10 +18,10 @@ class SegmentTree:
             # when i is on the right side
             if i % 2 == 1:
                 curr_sum += self.sums[i]
-                i += 1
+                i += 2
             if j % 2 == 0:
                 curr_sum += self.sums[j]
-                j -= 1
+                j -= 2
             i //=2
             j //=2
         
