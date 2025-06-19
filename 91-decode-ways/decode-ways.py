@@ -13,7 +13,7 @@ class Solution:
         self.s = s
         self.memo = [-1 for i in range(len(s))]
         result =  self.dp(0)
-        print(self.memo)
+        #print(self.memo)
         return result
 
     def dp(self, i):
