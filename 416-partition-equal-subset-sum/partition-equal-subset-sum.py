@@ -1,27 +1,29 @@
 class Solution:
-    # every partition
-
-    # you want to create the half of sum
-    # knapscak
+    # target = half
+    # knapsack
     def canPartition(self, nums: List[int]) -> bool:
         total_sum = sum(nums)
         if total_sum % 2 == 1:
             return False
         target = total_sum // 2
-        self.memo = {}
         self.nums = nums
-        return self.dp(0, target)
-        
-    def dp(self, i, target):
-        #print(i, target)
-        if target == 0:
+        # amount, i
+        self.memo = [[
+            -1 for i in range(len(nums))]
+            for j in range(target + 1)]
+        return self.dp(target, 0)
+
+    def dp(self, amount, i):
+        if amount == 0:
             return True
-        elif target < 0:
+        if i >= len(self.nums):
             return False
-        elif i == len(self.nums):
+        if amount < 0:
             return False
-        elif (i, target) in self.memo:
-            return self.memo[(i, target)]
-        result = self.dp(i+1, target) or self.dp(i+1, target - self.nums[i])
-        self.memo[(i, target)] = result
+        if self.memo[amount][i] != -1:
+            return self.memo[amount][i]
+        result = False
+        result = result or self.dp(amount - self.nums[i], i + 1)
+        result = result or self.dp(amount, i + 1)
+        self.memo[amount][i] = result
         return result
