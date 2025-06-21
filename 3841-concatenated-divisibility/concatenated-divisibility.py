@@ -13,9 +13,8 @@ class Solution:
         self.dp(0, 0, [])
         return self.answer
     def dp(self, visited, reminder, curr):
-        if visited == self.all_visited:
-            if reminder == 0:
-                self.answer = curr.copy()
+        if visited == self.all_visited and reminder == 0:
+            self.answer = curr.copy()
         if len(self.answer) > 0:
             return
         if self.memo[visited][reminder] != -1:
