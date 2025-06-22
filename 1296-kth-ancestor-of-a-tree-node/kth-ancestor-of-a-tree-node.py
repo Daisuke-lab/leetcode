@@ -1,42 +1,33 @@
 class TreeAncestor:
 
-    def __init__(self, n: int, parent: List[int]):
-        self.max_exponent = ceil(math.log(n, 2)) + 1
+    def __init__(self, n: int, parents: List[int]):
+        self.max_exponent = int(math.log(n, 2))
+        self.n = n
         self.ancestors = [[
-            -1 for i in range(self.max_exponent)]
-            for j in range(n)]
-        self.parents = parent
-
-        for node in range(n):
-            self.ancestors[node][0] = self.parents[node]
-        for exponent in range(self.max_exponent):
+            -1 for i in range(self.max_exponent + 1)]
+            for j in range(self.n)]
+        for node, parent in enumerate(parents):
+            self.ancestors[node][0] = parent
+        for exponent in range(self.max_exponent + 1):
             self.ancestors[0][exponent] = -1
-
-        for exponent in range(1, self.max_exponent):
-            for node in range(1, n):
-                # the 2^n-1 parent of node
-                # the 2^n-1 parent of the 2^n-1 parent
-                # (2^(x-1)) + (2^(x-1)) = (2^(x))
-                prev = self.ancestors[node][exponent -1]
+        
+        for exponent in range(self.max_exponent + 1):
+            for node in range(n):
+                prev = self.ancestors[node][exponent - 1]
                 if prev != -1:
-                    curr = self.ancestors[prev][exponent -1]
-                    self.ancestors[node][exponent] = curr
-
-
+                    self.ancestors[node][exponent] = self.ancestors[prev][exponent - 1]
+        
 
     def getKthAncestor(self, node: int, k: int) -> int:
-        # collect exponents
-        # k = 2^n + 2^m + 2^s + .....
-        # e.g. k = 6 = 4 + 2 => 2^2 + 2^1 => takes 2 jumps and 1 jump from there
-        binary = bin(k)[2:]
-        curr = node
+        binary =bin(k)[2:]
         for i, bit in enumerate(binary):
+            exponent = (len(binary) - (i+1))
             if bit == "1":
-                exponent = len(binary) - i -1
-                curr = self.ancestors[curr][exponent]
-                if curr == -1:
+                node = self.ancestors[node][exponent]
+                if node == -1:
                     return -1
-        return curr
+        return node
+
 
 # Your TreeAncestor object will be instantiated and called as such:
 # obj = TreeAncestor(n, parent)
