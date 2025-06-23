@@ -1,31 +1,39 @@
 class Solution:
-    # you might want total product
-    # two pointers?
-    # define what you make it remained
-    # n^2
-    # Math?
-    # Once you find k*n, it's endless
-    # (nk- m) * (pk - q) = m*q
-    # k + x or x without include k
-    # 
-    # prefix/suffix product
-    # only return count 
-    # n*k
-    # prefix * answer * suffix = total_product
-    # if x = 0, answer must have k
-    # if x = 1, 1 = total/prefix*suffix
-    # you have no idea which pointer you will shift
+    # product prefix/suffix
+    # 1,  2,  6, 12,70
+    # 120,120,60,20,5
+    # prefix[2] = nums[0] * nums[1] * nums[2]
+    # suffix[2] = nums[2] * nums[3] * nums[4]
+
+    # reminder of proeuct: prefix/suffix
+    # 1, 2, 0, 0, 0
+    # 0, 0, 0, 2, 2
+
+    # O(n^2)
+    # 1, 2, 0, 1, 2
+
+    # sliding window
+    # O(n^2)
+
+    # O(n) or O(nlogn)
+    # but you have to increment memo more than once in O(n) times then
     # 
     def resultArray(self, nums: List[int], k: int) -> List[int]:
-        answer = [0] * k
-        counts = [0] * k
-            
-        for num in nums:
-            new_counts = [0] * k
-            for i, count in enumerate(counts):
-                new_counts[i * num % k] += count
-                answer[i * num % k] += count
-            counts = new_counts
-            counts[num % k] += 1
-            answer[num % k] += 1
-        return answer
+        self.answer = [0 for i in range(k)]
+        self.memo = [[
+            0 for i in range(k)]
+            for j in range(len(nums))]
+        for i in range(len(nums)):
+            r =  nums[i] % k
+            self.memo[i][r] += 1
+            if i == 0:
+                continue
+            for r in range(k):
+                new_r = (r * nums[i]) %k
+                self.memo[i][new_r] += self.memo[i-1][r]
+
+
+        for i in range(len(self.memo)):
+            for r in range(k):
+                self.answer[r] += self.memo[i][r]
+        return self.answer
