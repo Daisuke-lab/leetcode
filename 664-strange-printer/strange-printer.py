@@ -1,29 +1,25 @@
 class Solution:
     def strangePrinter(self, s: str) -> int:
-        s = re.sub(r'(.)\1*', r'\1', s)
-        self.memo = [[
-            -1 for j in range(len(s))]
-            for i in range(len(s))]
         self.s = s
-        return self.dp(0, len(s) - 1)
-        
-    def dp(self, l, r):
-        if l == r:
+        self.memo = [[
+            -1 for i in range(len(s))]
+            for j in range(len(s))]
+        return self.dp(0, len(s) -1 )
+
+    def dp(self, i, j):
+        if i > j:
+            return 0
+        elif i == j:
             return 1
-        
-        if self.memo[l][r] != -1:
-            return self.memo[l][r]
-
-        min_cost = float("inf")
-
-        if self.s[l] == self.s[r]:
-            min_cost = self.dp(l+1, r)
+        elif self.memo[i][j] != -1:
+            return self.memo[i][j]
+        elif self.s[i] == self.s[j]:
+            self.memo[i][j] =  min(self.dp(i+1, j), self.dp(i, j-1))
+            return self.memo[i][j]
         else:
-            for k in range(l, r):
-                cost = self.dp(l, k) + self.dp(k+1, r)
+            min_cost = float("inf")
+            for k in range(i, j):
+                cost = self.dp(i, k) + self.dp(k + 1, j)
                 min_cost = min(min_cost, cost)
-        self.memo[l][r] = min_cost
-        return min_cost
-            
-            
-                
+            self.memo[i][j] = min_cost
+            return min_cost
