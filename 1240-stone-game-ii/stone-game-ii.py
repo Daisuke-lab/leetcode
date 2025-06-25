@@ -1,39 +1,33 @@
 class Solution:
+    # is_alice
+    # i
+    # m
     def stoneGameII(self, piles: List[int]) -> int:
         self.piles = piles
         self.memo = [[[
-            -1 for p in range(2)]
-            for q in range(len(piles)+1)]
-            for i in range(len(piles))]
-        return self.dp(0, 1, True)
+            -1 for a in range(101)]
+            for b in range(len(self.piles))]
+            for c in range(2)]
+        return self.dp(True, 0, 1)
 
-    def dp(self, i, m, is_alice):
-        
+    def dp(self, is_alice, i, m):
         if i >= len(self.piles):
             return 0
-
-        if self.memo[i][m][is_alice] != -1:
-            return self.memo[i][m][is_alice]
-        
-        result = 0
-        if is_alice:
-            current = 0
-            for x in range(1, 2*m + 1):
-                j = i + x -1
-                if j >= len(self.piles): # j = i + x -1 < len(pile) -1 <=> i + x < len(piles) <=> m < len(piles) - x
-                    break
-                current += self.piles[j]
-                result = max(result, self.dp(i+x, max(x, m), False) + current)
-        else:
-            result = float("inf")
-            for x in range(1, 2*m + 1):
-                result = min(result, self.dp(i+x, max(x, m), True))
-        self.memo[i][m][is_alice] = result
-        #print(f"i:{i}, m:{m}, is_alice:{is_alice}, result:{result}")
-        return result
-                
-
-
-        
-
-        
+        if self.memo[is_alice][i][m] != -1:
+            return self.memo[is_alice][i][m]
+        start = 1
+        end = 2*m
+        profit = - float("inf") if is_alice else float("inf")
+        curr_profit = 0
+        for x in range(start, end+1):
+            if i + x - 1 >= len(self.piles):
+                break
+            if is_alice:
+                curr_profit += self.piles[i+x-1]
+                total_profit = curr_profit + self.dp(False, i+x, max(x, m))
+                profit = max(profit, total_profit)
+            else:
+                total_profit = self.dp(True, i+x, max(x, m))
+                profit = min(profit, total_profit)
+        self.memo[is_alice][i][m] = profit
+        return profit
