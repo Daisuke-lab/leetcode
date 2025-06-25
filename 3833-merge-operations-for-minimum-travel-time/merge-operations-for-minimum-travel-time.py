@@ -1,7 +1,6 @@
 class Solution:
     def minTravelTime(self, l: int, n: int, k: int, positions: List[int], times: List[int]) -> int:
         self.time_prefix_sums = self.get_prefix_sums(times)
-        #print(self.time_prefix_sums)
         self.positions = positions
         self.n = n
         self.memo = [[[
@@ -11,7 +10,7 @@ class Solution:
         result = self.dp(0, 0, k)
         return result
         
-
+    # the minimul travel time when i <=> j is already merged
     def dp(self, i, j, k):
         #print(i, j, k)
         if j == self.n -1:
@@ -23,17 +22,17 @@ class Solution:
             return self.memo[i][j][k]
         # the speed when you merge from i to j
         # you would't change the spped at i when you merge, it changes at i + 1
-        rate = (self.time_prefix_sums[j] - self.time_prefix_sums[i-1]) if i != 0 else self.time_prefix_sums[j]
+        rate = self.time_prefix_sums[j] - self.time_prefix_sums[i-1] if i != 0 else self.time_prefix_sums[j]
         #print(rate)
 
-        # in case you don't merge at current point
+
         result = float("inf")
         original_k = k
-        till = min(self.n - 1, j + k + 1)
         for next_j in range(j+1, self.n):
             if k < 0:
                 break
             distance = self.positions[next_j] - self.positions[j]
+            # In the first iteration, it'd be self.dp(j+1, j+1, k) => when you don't merge i to j
             cost = distance * rate + self.dp(j+1, next_j, k)
             result = min(result, cost)
             k-= 1
