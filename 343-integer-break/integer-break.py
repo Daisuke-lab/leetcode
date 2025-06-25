@@ -1,14 +1,18 @@
 class Solution:
-    # i is current index
-    # j is a splitter
-    
     def integerBreak(self, n: int) -> int:
-        tab = [i for i in range(n+1)]
-        tab[n] = 0
-        for i in range(n+1):
-            for j in range(i):
-                left = j
-                right = i - j
-                product = tab[left] * tab[right]
-                tab[i] = max(tab[i], product)
-        return tab[n]
+        self.memo = [-1 for i in range(n + 1)]
+        self.n = n
+        return self.dp(n)
+
+    def dp(self, n):
+        if n == 1:
+            return 1
+        elif self.memo[n] != -1:
+            return self.memo[n]
+        max_product = n if n != self.n else 0
+        for i in range(1, n):
+            product = i * self.dp(n - i)
+            max_product = max(max_product, product)
+        self.memo[n] = max_product
+        return max_product
+        
