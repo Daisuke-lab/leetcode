@@ -1,43 +1,38 @@
 class Solution:
-
+    # DFS from the edges
+    # change O to P
+    # after that, go through matrix, changing O to X and P to O
     def solve(self, board: List[List[str]]) -> None:
-        self.board = board
+        """
+        Do not return anything, modify board in-place instead.
+        """
         self.ROW = len(board)
         self.COL = len(board[0])
-        self.check_safe_zone()
-        self.conquer()
-        return board
-
-    def conquer(self):
+        self.board = board
+        for i in range(self.ROW):
+            self.mark_safe_zone(i, 0)
+            self.mark_safe_zone(i, self.COL - 1)
+        for j in range(self.COL):
+            self.mark_safe_zone(0, j)
+            self.mark_safe_zone(self.ROW - 1, j)
         for i in range(self.ROW):
             for j in range(self.COL):
-                if self.board[i][j] == "O":
-                    self.board[i][j] = "X"
-                elif self.board[i][j] == "S":
-                    self.board[i][j] = "O"
+                if board[i][j] == "O":
+                    board[i][j] = "X"
+                elif board[i][j] == "P":
+                    board[i][j] = "O"
         
+
+
+    def mark_safe_zone(self, i, j):
+        if i < 0 or j < 0 or i >= self.ROW or j >= self.COL:
+            return 
+        elif self.board[i][j] in ["X", "P"]:
+            return
+        self.board[i][j] = "P"
+        self.mark_safe_zone(i-1, j)
+        self.mark_safe_zone(i+1, j)
+        self.mark_safe_zone(i, j-1)
+        self.mark_safe_zone(i, j+1)
+
         
-    def check_safe_zone(self):
-        queue = collections.deque()
-        for i in range(self.ROW):
-            if self.board[i][0] == "O":
-                queue.append((i, 0))
-            if self.board[i][self.COL -1] == "O":
-                queue.append((i, self.COL -1))
-        for j in range(self.COL):
-            if self.board[0][j] == "O":
-                queue.append((0, j))
-            if self.board[self.ROW-1][j] == "O":
-                queue.append((self.ROW-1, j))
-        while queue:
-            i, j = queue.popleft()
-            self.board[i][j] = "S"
-            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-            for direction in directions:
-                next_i = i + direction[0]
-                next_j = j + direction[1]
-                if next_i < 0 or next_j < 0 or next_i == self.ROW or next_j == self.COL:
-                    continue
-                if self.board[next_i][next_j] == "O":
-                    queue.append((next_i, next_j))
-                                    
