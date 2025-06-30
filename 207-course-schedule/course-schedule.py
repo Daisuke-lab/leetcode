@@ -1,33 +1,33 @@
 class Solution:
+    # prerequisite => main class
+    # do topological sort
+    # if the number is the same, return true
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        self.out_list = self.init_out_list(numCourses, prerequisites)
-        self.topological_sort = []
-        for node in range(numCourses):
-            if node not in self.out_list:
-                continue
-            if self.dfs(node, set()) is False:
-                return False
-        #print(self.topological_sort)
-        return len(self.topological_sort) == numCourses
-
-    def dfs(self, node, path):
-        if node in path:
-            return False
-        if node not in self.out_list:
-            return True
-        path.add(node)
-        for ad in self.out_list[node]:
-            if self.dfs(ad, path) is False:
-                return False
-        path.remove(node)
-        del self.out_list[node]
-        self.topological_sort.append(node)
-        return True
+        edges = prerequisites
+        n = numCourses
+        in_list, out_list = self.init_ad_list(n, edges)
+        zero_incomings = self.get_zero_incomings(in_list)
+        visited = set()
+        while zero_incomings:
+            node = zero_incomings.popleft()
+            visited.add(node)
+            for ad in out_list[node]:
+                in_list[ad].remove(node)
+                if len(in_list[ad]) == 0:
+                    zero_incomings.append(ad)
+        return len(visited) == n
         
+    def get_zero_incomings(self, in_list):
+        zero_incomings = collections.deque()
+        for node in in_list.keys():
+            if len(in_list[node]) == 0:
+                zero_incomings.append(node)
+        return zero_incomings
 
-
-    def init_out_list(self, n, edges):
+    def init_ad_list(self, n, edges):
+        in_list = {i: set() for i in range(n)}
         out_list = {i: set() for i in range(n)}
-        for node1, node2 in edges:
-            out_list[node1].add(node2)
-        return out_list
+        for v1, v2 in edges:
+            in_list[v1].add(v2)
+            out_list[v2].add(v1)
+        return in_list, out_list
