@@ -1,67 +1,67 @@
 class UnionFind:
     def __init__(self, n):
         self.parents = [i for i in range(n)]
-        
-
+        self.count = n
+    
     def find(self, node):
         while node != self.parents[node]:
             self.parents[node] = self.parents[self.parents[node]]
             node = self.parents[node]
         return node
+
     def union(self, v1, v2):
         v1_parent = self.find(v1)
         v2_parent = self.find(v2)
         if v1_parent == v2_parent:
-            return 
+            return False
         self.parents[v2_parent] = v1_parent
+        self.count -= 1
+        return True
 
 
 class Solution:
-    # try kruscal usual
-    # remove 1 edge in the inital result and try again
-    # if mst changes, the missing edge is critical
-    # if not, it is psuedo critical
-    #         any of edge in the same size mst, you should be in the edge set to examine
+    # Critical Edge
+    # do Kruscal as normal
+    # remove one edge and see if it changes the total cost, If so, that is critical
+
+    # Pseudo Edge
+    # there might be some edges that never appears even if you delete a critical edge
+    # => you can force use the edge and then see what is going to happen
+    # 
     def findCriticalAndPseudoCriticalEdges(self, n: int, edges: List[List[int]]) -> List[List[int]]:
-        original_edges = edges
-        self.index_map, edges = self.sort_edges(edges)
-        mst_edges, min_cost = self.kruscal(n, edges)
-        criticals = []
-        pseudo_criticals = []
-        for i, edge in enumerate(edges):
-            is_critical = False
-            potential_mst_edges, cost = self.kruscal(n, edges, edge, False)
-            if cost != min_cost:
-                criticals.append(self.index_map[i])
-                is_critical = True
-            potential_mst_edges, cost = self.kruscal(n, edges, edge, True)
-            if cost == min_cost and not is_critical:
-                pseudo_criticals.append(self.index_map[i])
+        critical_edges = set()
+        pseudo_critical_edges = set()
+        edges, index_map = self.sort_edges_with_map(edges)
+        right_mst_cost = self.create_mst(n, edges)
+        for i in range(len(edges)):
+            original_index = index_map[i]
+            mst_cost = self.create_mst(n, edges, avoidant_edge=edges[i])
+            if mst_cost != right_mst_cost:
+                critical_edges.add(original_index)
+            else:
+                mst_cost = self.create_mst(n, edges, must_edge=edges[i])
+                if mst_cost == right_mst_cost:
+                    pseudo_critical_edges.add(original_index)
+        return [list(critical_edges), list(pseudo_critical_edges)]
 
-        return [criticals, pseudo_criticals]
-
-    def kruscal(self, n, edges, special_edge=None, include=False):
+    def create_mst(self, n, edges, must_edge=None, avoidant_edge=None):
         union_find = UnionFind(n)
-        min_cost = 0
-        mst_edges = set()
-        if include:
-            min_cost += special_edge[2]
-            union_find.union(special_edge[0], special_edge[1])
-        for i, edge in enumerate(edges):
-            if union_find.find(edge[0]) == union_find.find(edge[1]):
+        total_cost = 0
+        if must_edge:
+            union_find.union(must_edge[0], must_edge[1])
+            total_cost += must_edge[2]
+        for edge in edges:
+            if avoidant_edge and edge[0] == avoidant_edge[0] and edge[1] == avoidant_edge[1]:
                 continue
-            if not include and special_edge and edge[0] == special_edge[0] and edge[1] == special_edge[1]:
-                continue
-            min_cost += edge[2]
-            union_find.union(edge[0], edge[1])
-            mst_edges.add(self.index_map[i])
-        return mst_edges, min_cost
+            if union_find.union(edge[0], edge[1]):
+                total_cost += edge[2]
+            if union_find.count ==1:
+                return total_cost
+        return total_cost
 
-    def sort_edges(self, edges):
-        pairs = [(i, edge) for i, edge in enumerate(edges)]
-        pairs.sort(key=lambda pair: pair[1][2])
-        index_map = {i: pair[0] for i, pair in enumerate(pairs)}
-        sorted_edges = [pair[1] for pair in pairs]
-        return index_map, sorted_edges
-        
-        
+    def sort_edges_with_map(self, edges):
+        indexed_edges = [edge + [i] for i, edge in enumerate(edges)]
+        indexed_edges.sort(key=lambda edge: edge[2])
+        index_map = {i: edge[-1] for i, edge in enumerate(indexed_edges)}
+        sorted_edges = [[a,b,c] for a,b,c, original_index in indexed_edges]
+        return sorted_edges, index_map
