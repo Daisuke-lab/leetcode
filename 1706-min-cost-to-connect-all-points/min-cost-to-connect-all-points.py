@@ -1,49 +1,19 @@
-class UnionFind:
-    def __init__(self, n):
-        self.parents = [i for i in range(n)]
-        self.distances = [0 for i in range(n)]
-        self.components = n
-
-    def find(self, node):
-        while node != self.parents[node]:
-            self.parents[node] = self.parents[self.parents[node]]
-            node = self.parents[node]
-        return node
-
-    def union(self, v1, v2, distance):
-        v1_parent = self.find(v1)
-        v2_parent = self.find(v2)
-        if v1_parent == v2_parent:
-            return False
-        if self.distances[v1_parent] > self.distances[v2_parent]:
-            self.parents[v2_parent] = v1_parent
-            self.distances[v1_parent] += self.distances[v2_parent] + distance
-        else:
-            self.parents[v1_parent] = v2_parent
-            self.distances[v2_parent] += self.distances[v1_parent] + distance
-        self.components -=1
-        return True 
-
 class Solution:
     def minCostConnectPoints(self, points: List[List[int]]) -> int:
-        n = len(points)
-        self.points = points
-        union_find = UnionFind(n)
-        edges = sorted(self.collect_edges(n), key=lambda edge: edge[2])
-        for v1, v2, distance in edges:
-            union_find.union(v1, v2, distance)
-            if union_find.components == 1:
-                return union_find.distances[union_find.find(0)]
-        return union_find.distances[union_find.find(0)]
-
-    def collect_edges(self, n):
-        edges = []
-        for i in range(n-1):
-            for j in range(i+1, n):
-                distance = self.get_distance(i, j) 
-                edges.append((i, j, distance))
-        return edges
-
-    def get_distance(self, v1, v2):
-        return abs(self.points[v1][0] - self.points[v2][0]) + abs(self.points[v1][1] - self.points[v2][1])
-        
+        visited = set()
+        min_heap = [(0, points[0][0], points[0][1])]
+        total_cost = 0
+        while min_heap:
+            cost, i, j = heapq.heappop(min_heap)
+            if (i, j) in visited:
+                continue
+            if len(visited) == len(points):
+                break
+            total_cost += cost
+            visited.add((i, j))
+            for next_i, next_j in points:
+                if (next_i, next_j) in visited:
+                    continue
+                cost = abs(next_i - i) + abs(next_j - j)
+                heapq.heappush(min_heap, (cost, next_i, next_j))
+        return total_cost
