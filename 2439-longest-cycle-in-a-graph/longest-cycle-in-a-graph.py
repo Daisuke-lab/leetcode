@@ -35,6 +35,7 @@ class Solution:
             meeting_point = self.find_cycle(ad, curr_visited, path)
             if meeting_point != -1:
                 return meeting_point
+        self.ad_list[node] = set()
         curr_visited.remove(node)
         del path[-1]
         return -1
