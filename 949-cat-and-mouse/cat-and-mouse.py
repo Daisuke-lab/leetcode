@@ -1,5 +1,7 @@
 from collections import deque
 
+CAT_TURN = 0
+MOUSE_TURN = 1
 class Solution:
     def catMouseGame(self, graph: List[List[int]]) -> int:
         n = len(graph)
@@ -13,8 +15,8 @@ class Solution:
         
         for mouse in range(n):
             for cat in range(n):
-                degree[mouse][cat][0] = len(ad_list[mouse])  # mouse's turn, can move to any adjacent node
-                degree[mouse][cat][1] = len(ad_list[cat]) - (0 in ad_list[cat])  # cat's turn, can't move to 0
+                degree[mouse][cat][CAT_TURN] = len(ad_list[mouse])  # mouse's turn, can move to any adjacent node
+                degree[mouse][cat][MOUSE_TURN] = len(ad_list[cat]) - (0 in ad_list[cat])  # cat's turn, can't move to 0
         
         queue = collections.deque()
         # Initialize terminal states
@@ -41,35 +43,33 @@ class Solution:
                 for next_cat in ad_list[cat]:
                     if next_cat == 0:
                         continue
-                    mouse_turn = 1
                     # if already visited, continue
-                    if color[mouse][next_cat][mouse_turn] != 0:
+                    if color[mouse][next_cat][MOUSE_TURN] != 0:
                         continue
-                    # if current result is 2, anf after mouse finished moving and position itself at "mouse"
+                    # if current result is 2, and after mouse finished moving and position itself at "mouse"
                     # cat can reach out from next_cat to current "cat" position
                     if result == 2:
-                        color[mouse][next_cat][mouse_turn] = 2
-                        queue.append((mouse, next_cat, mouse_turn))
+                        color[mouse][next_cat][MOUSE_TURN] = 2
+                        queue.append((mouse, next_cat, MOUSE_TURN))
                     # if there is a selection that leads to mouse's win, you decrease the degree by 1
                     elif result == 1:
-                        degree[mouse][next_cat][mouse_turn] -= 1
+                        degree[mouse][next_cat][MOUSE_TURN] -= 1
                         # once it's guaranteed there is no more option (no degree), you mark it as 1
-                        if degree[mouse][next_cat][mouse_turn] == 0:
-                            color[mouse][next_cat][mouse_turn] = 1
-                            queue.append((mouse, next_cat, mouse_turn))
+                        if degree[mouse][next_cat][MOUSE_TURN] == 0:
+                            color[mouse][next_cat][MOUSE_TURN] = 1
+                            queue.append((mouse, next_cat, MOUSE_TURN))
             elif is_mouse_turn:  
                 for next_mouse in ad_list[mouse]:
-                    cat_turn = 0
-                    if color[next_mouse][cat][cat_turn] != 0:
+                    if color[next_mouse][cat][CAT_TURN] != 0:
                         continue
                     if result == 1:
-                        color[next_mouse][cat][cat_turn] = 1
-                        queue.append((next_mouse, cat, cat_turn))
+                        color[next_mouse][cat][CAT_TURN] = 1
+                        queue.append((next_mouse, cat, CAT_TURN))
                     elif result == 2:
-                        degree[next_mouse][cat][cat_turn] -= 1
-                        if degree[next_mouse][cat][cat_turn] == 0:
-                            color[next_mouse][cat][cat_turn] = 2
-                            queue.append((next_mouse, cat, cat_turn))
+                        degree[next_mouse][cat][CAT_TURN] -= 1
+                        if degree[next_mouse][cat][CAT_TURN] == 0:
+                            color[next_mouse][cat][CAT_TURN] = 2
+                            queue.append((next_mouse, cat, CAT_TURN))
         
         # if it is not appended to the queue (neither 1 nor 2), it's 0
         return 0
