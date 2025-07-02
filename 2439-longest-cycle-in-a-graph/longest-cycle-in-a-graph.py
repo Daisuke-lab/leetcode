@@ -5,7 +5,7 @@ class Solution:
     def longestCycle(self, edges: List[int]) -> int:
         n = len(edges)
         self.ad_list = self.init_ad_list(n, edges)
-        print(self.ad_list)
+        #print(self.ad_list)
         self.explored = set()
         max_length = -1
         for node in range(n):
@@ -35,7 +35,7 @@ class Solution:
             meeting_point = self.find_cycle(ad, curr_visited, path)
             if meeting_point != -1:
                 return meeting_point
-        self.ad_list[node] = set()
+        
         curr_visited.remove(node)
         del path[-1]
         return -1
