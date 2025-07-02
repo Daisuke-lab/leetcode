@@ -3,27 +3,44 @@ class Solution:
     # collected <= n - 2
     def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:
         self.ad_list = self.init_ad_list(n, edges)
-        collected = set()
-        one_incomings = self.get_one_incomings(self.ad_list)
-        while one_incomings and len(collected) < n - 2:
-            count = len(one_incomings)
-            for i in range(count):
-                node = one_incomings.popleft()
-                if node in collected:
-                    continue
-                collected.add(node)
-                for ad in self.ad_list[node]:
-                    self.ad_list[ad].remove(node)
-                    if len(self.ad_list[ad]) == 1:
-                        one_incomings.append(ad)
-        return list(one_incomings)
+        edge_node1, _ = self.get_farest_node(0)
+        edge_node2, _ = self.get_farest_node(edge_node1)
+        path = collections.deque()
+        path = self.get_path(edge_node1, edge_node2, path)
+        return self.trim(path)
 
-    def get_one_incomings(self, ad_list):
-        one_incomings = collections.deque()
-        for node in ad_list.keys():
-            if len(ad_list[node]) <= 1:
-                one_incomings.append(node)
-        return one_incomings
+    def trim(self, path):
+        while len(path) > 2:
+            path.popleft()
+            path.pop()
+        return list(path)    
+    
+    def get_path(self, src, dest, path, parent=-1):
+        if src == dest:
+            path.append(dest)
+            return path
+        for ad in self.ad_list[src]:
+            if ad == parent:
+                continue
+            new_path = self.get_path(ad, dest, path, src)
+            if len(new_path) > 0:
+                path.append(src)
+                return path
+        return path
+
+
+    def get_farest_node(self, node, parent=-1):
+        max_distance = 0
+        farest_node = node
+        for ad in self.ad_list[node]:
+            if ad == parent:
+                continue
+            far_node, distance = self.get_farest_node(ad, node)
+            if distance > max_distance:
+                max_distance = distance
+                farest_node = far_node
+        max_distance += 1
+        return farest_node, max_distance
 
 
     def init_ad_list(self, n, edges):
