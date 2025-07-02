@@ -31,8 +31,8 @@ class Solution:
         curr_visited.add(node)
         path.append(node)
         self.explored.add(node)
-        for ad in self.ad_list[node]:
-            meeting_point = self.find_cycle(ad, curr_visited, path)
+        if self.ad_list[node] != -1:
+            meeting_point = self.find_cycle(self.ad_list[node], curr_visited, path)
             if meeting_point != -1:
                 return meeting_point
         
@@ -41,8 +41,7 @@ class Solution:
         return -1
 
     def init_ad_list(self, n, edges):
-        ad_list = {i: set() for i in range(n)}
+        ad_list = {i: -1 for i in range(n)}
         for v1, v2 in enumerate(edges):
-            if v2 != -1:
-                ad_list[v1].add(v2)
+            ad_list[v1] = v2
         return ad_list
