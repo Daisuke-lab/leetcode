@@ -1,43 +1,47 @@
 class Solution:
-    # 1 node can be in 1 cycle
-    # you need global visited to avoid the duplicates
-    # you want path. no need of cycle
+    # create ad_list
+    # dfs from unvisited node (find cycle)
+    # trim 
     def longestCycle(self, edges: List[int]) -> int:
         n = len(edges)
-        self.edges = edges
-        self.visited = set()
-        longest_cycle = -1
-        for i in range(n):
-            if i not in self.visited:
+        self.ad_list = self.init_ad_list(n, edges)
+        print(self.ad_list)
+        self.explored = set()
+        max_length = -1
+        for node in range(n):
+            if node not in self.explored:
                 path = collections.deque()
-                local_visited = set()
-                cycle_starting_point = self.find_cycle(i, path, local_visited)
-                if cycle_starting_point != -1:
-                    cycle = self.trim(path, cycle_starting_point)
-                    longest_cycle = max(longest_cycle, len(cycle))
-        return longest_cycle
+                meeting_point = self.find_cycle(node, set(), path)
+                #print(meeting_point)
+                if meeting_point != -1:
+                    length = self.trim(meeting_point, path)
+                    max_length = max(max_length, length)
+        return max_length
 
-
-    def trim(self, path, cycle_starting_point):
-        while path[0] != cycle_starting_point:
+    def trim(self, meeting_point, path):
+        while path[0] != meeting_point:
             path.popleft()
-        #print(path)
-        path.popleft()
-        return path
-
-
-    def find_cycle(self, curr, path, local_visited):
-        if curr in local_visited:
-            path.append(curr)
-            return curr
-        if curr in self.visited:
+        return len(path)
+    
+    def find_cycle(self, node, curr_visited, path):
+        if node in curr_visited:
+            return node
+        if node in self.explored:
             return -1
-        self.visited.add(curr)
-        next_node = self.edges[curr]
-        path.append(curr)
-        local_visited.add(curr)
-        #cycle.add(curr)
-        if next_node == -1:
-            return -1
-        else:
-            return self.find_cycle(next_node, path, local_visited)
+        curr_visited.add(node)
+        path.append(node)
+        self.explored.add(node)
+        for ad in self.ad_list[node]:
+            meeting_point = self.find_cycle(ad, curr_visited, path)
+            if meeting_point != -1:
+                return meeting_point
+        curr_visited.remove(node)
+        del path[-1]
+        return -1
+
+    def init_ad_list(self, n, edges):
+        ad_list = {i: set() for i in range(n)}
+        for v1, v2 in enumerate(edges):
+            if v2 != -1:
+                ad_list[v1].add(v2)
+        return ad_list
