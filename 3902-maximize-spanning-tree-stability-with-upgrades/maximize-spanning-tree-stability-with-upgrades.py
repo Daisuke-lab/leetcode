@@ -29,8 +29,9 @@ class Solution:
             else:
                 return -1
         for v1, v2, strength in unmust_edges:
+            edges_to_be_added = union_find.count - 1
             if union_find.union(v1, v2):
-                strength = strength*2 if (union_find.count) <= k and k> 0 else strength
+                strength = strength*2 if edges_to_be_added <= k and k> 0 else strength
                 min_strength = min(min_strength, strength)
             if union_find.count == 1:
                 return min_strength
