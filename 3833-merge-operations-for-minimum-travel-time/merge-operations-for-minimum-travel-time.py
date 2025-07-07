@@ -36,7 +36,6 @@ class Solution:
                 break
             distance = self.positions[j] - self.positions[i]
             next_speed += self.times[j]
-            # In the first iteration, it'd be self.dp(j+1, j+1, k) => when you don't merge i to j
             cost = distance * speed + self.dp(j, k, next_speed)
             min_cost = min(min_cost, cost)
             k-= 1
